@@ -234,6 +234,7 @@ create_partition_info <- function(df1,df2,m){
 
 }
 
+#' create.xy.breaks
 #' @import dplyr
 create.xy.breaks <- function(dat,m,first.axis){
 
