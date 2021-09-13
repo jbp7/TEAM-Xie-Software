@@ -51,6 +51,9 @@ data(EQAPOL_Ex)
 # Authors
 
 John Pura, Duke University 
+
 Xuechan Li, Duke University
+
 Cliburn Chan, Duke University
+
 Jixuen Xie, Duke University
