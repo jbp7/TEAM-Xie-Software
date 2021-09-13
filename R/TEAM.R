@@ -1,17 +1,11 @@
-#' Testing on an Aggregation Tree Method
-#'
-#' This function performs multiple testing embedded in an aggregation tree structure in order to identify local differences between two probability density functions
-#'
+#' @title Testing on an Aggregation Tree Method
+#' @description This function performs multiple testing embedded in an aggregation tree structure in order to identify local differences between two probability density functions
 #' @importFrom stats ks ggplot2 plyr data.table dplyr
-#'
-#' @param partition_info #Partition for first layer of aggregation tree
+#' @param partition_info Partition for first layer of aggregation tree
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
-#'
 #' @return A \code{\link{list}} containing the number of pooled observations in each bin (n), the number of bins/leaves at each layer (m.l), the discoveries (S.list) in each layer and the estimated layer-specific thresholds (c.hats)
-#'
 #' @references Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis \url{https://arxiv.org/abs/1906.07757}
-#'
 #' @examples
 #' ## Example with 1D pdfs: find where case density is higher than control density
 #' set.seed(1)
@@ -34,21 +28,20 @@
 #' #res$S.list
 #' #Map rejected bins to corresponding regions (not run)
 #' #partition1D$bin.df$x.bd[res$S.list[[3]]]
-#'
 #' @export TEAM
 TEAM = function(partition_info,alpha,L){
 
   #Local copy
-  bin_df_ <- setDT(partition_info$bin.df) 
-  
+  bin_df_ <- setDT(partition_info$bin.df)
+
   #Create layer 1 indices and sort by index
   bin_df_ <- bin_df_[, L1 := indx]
   #bin_df_ <- setorder(bin_df_,indx)
-  
+
   #number of pooled observations per bin
   N1 = partition_info$N1
   N2 = partition_info$N2
-  
+
   #Global/Initial variables
   c.hats = vector("integer",L) #set of critical values
   S = NULL #set of rejections regions
@@ -56,53 +49,53 @@ TEAM = function(partition_info,alpha,L){
   S.list=vector("list",L)
   m.l.vec=vector("list",L)
   #Label bins across row (1,m+1,2*m+1,...)
-  
+
   theta0 = N2/(N1+N2)
   n = round((N1+N2)/(partition_info$m^partition_info$nd))
-  
+
   #Loop through layers
   for (l in seq(L)){
-    
+
     if(l > 1){
       #Create bin info for next layers
       Ll <- paste0("L",l)
       bin_df_ <-  bin_df_[, (Ll) := {
         idx <- ceiling(rleid(L1) / 2^(l-1))
-        numL1 <- uniqueN(L1) 
+        numL1 <- uniqueN(L1)
         if(numL1 > 1 && between(numL1 %% 2^(l-1),1,2^(l-1)-1)) {
           idx[idx == idx[.N]] <- NA
         }
         idx
-      }] 
-      
+      }]
+
       c_hat_prev = c.hats[l-1]
     } else{
       c_hat_prev = NULL
     }
-    
+
     #Run procedure
     proc_res = run_proc(l=l,
                         n=n,
                         partition_info_l=bin_df_,
                         theta0=theta0,
                         c_hat_prev=c_hat_prev,
-                        alpha=alpha)   
-    
+                        alpha=alpha)
+
     S = proc_res$rej
-    
+
     S.list[l] = list(unique(c(unlist(S.list),S)))
-    
+
     m.l.vec[l] = proc_res$m.l
-    
+
     #append c hat vector
     c.hats[l] = proc_res$c.hat
-    
+
     #Update bin_df_ based on previous layer discoveries
     bin_df_ <- bin_df_[!(bin_df_$L1 %in% S), ]
-    
+
   }
-  
-  
+
+
   return(list("n"=n,
               "m.l"=m.l.vec,
               "S.list"=S.list,
@@ -121,58 +114,54 @@ ind.1D.each.row <- function(ind.1D,factor){
 }
 
 #' create_partition_info
-#' 
-#'
 #' Creates a partition of the 1D or 2D sample space of the pooled observations into mutually disjoint bins.
 #' The bins form the leaves or finest-level regions for layer 1 of the aggregation tree.
 #' @param df1 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the reference sample
 #' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the non-reference sample (want to find regions enriched for these observations)
-#' @param m A positive integer specifying the number of bins in layer 1 
-#' 
-#' @importFrom dplyr
-#'
-# @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat), 
+#' @param m A positive integer specifying the number of bins in layer 1
+#' @import dplyr
+# @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
 # a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
 # the breaks along each dimension for the bins (breaks)
 create_partition_info <- function(df1,df2,m){
-  
+
   N1 = nrow(df1)
   N2 = nrow(df2)
-  
+
   df <- rbind(df1,df2)
   df$lab <- rep(c(0,1),times=c(N1,N2))
-  
+
   nd <- ncol(df1)#length(a)
-  
+
   if(nd==1){ #1D setting
-    
+
     df$quant = with(df, cut_number(df$X, n = m))
-    
+
     x_quant = aggregate(lab~quant,df,sum)
     n = as.vector(table(df$quant))
     breaks = quantile(df$X,probs = seq(0,1,length.out = m+1))
-    
+
     out <- data.frame(indx = seq(m^nd),
                       x.bd = x_quant$quant,
                       #y.bd = NULL,
                       n = n,
                       x = x_quant$lab)
     first.axis = NA
-    
+
   } else{ #2D setting
-    
+
     #Determine dim with highest variance and cut first along that dim
     var.x <- var(df$X)
     var.y <- var(df$Y)
     first.axis <- ifelse(var.x>var.y,1,2)
-    
+
     #Create breaks
     breaks = create.xy.breaks(dat=df,m=m,first.axis=first.axis)
-    
-    
+
+
     a <- as.list(rep(m,nd))
     b <- seq(m^nd)
-    
+
     mat.indx <- matrix(NA,nrow=length(b),ncol=length(a))
     tmp.b <- b
     for(d in seq_along(a)){
@@ -180,10 +169,10 @@ create_partition_info <- function(df1,df2,m){
                                                    bitwShiftL(a[[d]],1L)),1L)+1L
       tmp.b <- ((tmp.b-1L) %/% a[[d]])+1L
     }
-    
+
     indx_snake <- array(NA,unlist(a))
     indx_snake[mat.indx[b,]] <- b
-    
+
     if(first.axis==1){
       x.bds <- NULL
       for(i in seq(length(breaks$x)-1)){
@@ -194,12 +183,12 @@ create_partition_info <- function(df1,df2,m){
         }
         x.bds <- c(x.bds,bd)
       }
-      
+
       x.bd <- rep(x.bds,each=length(breaks$y))
       y.bd <- unlist(lapply(breaks$y,function(x) names(x[["n"]])))
       n = unlist(lapply(breaks$y, '[[', "n"))[c(t(indx_snake))]
       x = unlist(lapply(breaks$y, '[[', "x"))[c(t(indx_snake))]
-      
+
       out <- data.frame(indx = seq(m^nd),
                         x.bd = x.bd,
                         y.bd = y.bd[c(t(indx_snake))],
@@ -217,12 +206,12 @@ create_partition_info <- function(df1,df2,m){
         }
         y.bds <- c(y.bds,bd)
       }
-      
+
       x.bd <- unlist(lapply(breaks$x,function(x) names(x[["n"]])))
       y.bd <- rep(y.bds,each=length(breaks$x))
       n = unlist(lapply(breaks$x, '[[', "n"))[c(t(indx_snake))]
       x = unlist(lapply(breaks$x, '[[', "x"))[c(t(indx_snake))]
-      
+
       out <- data.frame(indx = seq(m^nd),
                         x.bd = x.bd[c(t(indx_snake))],
                         y.bd = y.bd,
@@ -231,9 +220,9 @@ create_partition_info <- function(df1,df2,m){
       ) %>%
         dplyr::arrange(indx)
     }
-    
+
   }
-  
+
   list(dat = df,
        N1=N1,
        N2=N2,
@@ -242,16 +231,16 @@ create_partition_info <- function(df1,df2,m){
        bin.df = out,
        breaks=breaks,
        first.axis=first.axis)
-  
+
 }
 
-#' @importFrom dplyr
+#' @import dplyr
 create.xy.breaks <- function(dat,m,first.axis){
-  
+
   if(first.axis==1){
     brk.x <- quantile(dat$X,seq(0,1,length.out = m+1))
     brk.y <- vector("list",m)
-    
+
     for(i in seq(m)){
       x.subset = which(between(dat$X,brk.x[i],brk.x[i+1]))
       brk.y[[i]]$breaks = quantile(dat$Y[x.subset],seq(0,1,length.out = m+1))
@@ -263,7 +252,7 @@ create.xy.breaks <- function(dat,m,first.axis){
   else{
     brk.y <- quantile(dat$Y,seq(0,1,length.out = m+1))
     brk.x <- vector("list",m)
-    
+
     for(j in seq(m)){
       y.subset = which(between(dat$Y,brk.y[j],brk.y[j+1]))
       brk.x[[j]]$breaks = quantile(dat$X[y.subset],seq(0,1,length.out = m+1))
@@ -272,7 +261,7 @@ create.xy.breaks <- function(dat,m,first.axis){
       brk.x[[j]]$n = table(brk.x[[j]]$binnedpts)
     }
   }
-  
+
   return(list(x=brk.x,y=brk.y,first.axis=first.axis))
 }
 
@@ -285,41 +274,41 @@ matsplitter<-function(M, r, c) {
 }
 
 run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
-  
+
   Ll <- paste0("L",l)
-  
+
   #Only keep Ll-1 and Ll
-  
+
   #Update bin_df each time
   #Aggregate layer 1 x's to get layer (l) x's
   xlform = as.formula(paste("x ~", Ll))
   x_l = aggregate(xlform, data=partition_info_l, sum)$x
   n_l = 2^(l-1)*n
   m_l = length(x_l)
-  
+
   a_l =  1/(m_l*log(m_l))
-  
-  #min_c = qbinom(alpha,n.l,theta0,lower.tail=FALSE) #Indices that are immediately ignored - add this to calculate 
+
+  #min_c = qbinom(alpha,n.l,theta0,lower.tail=FALSE) #Indices that are immediately ignored - add this to calculate
   x_l_valid = sort(unique(x_l[x_l>n_l*theta0]),decreasing = TRUE)
-  
+
   #Compute p-values only for unique values of valid x's
   x_l_sort <- sort(x_l,decreasing = FALSE)
-  
+
   #Get the rank based on sum(I(Xi>x)) = sum(G0i(X_i) <= c)
   rank_x_l_valid = vapply(x_l_valid,function(z) sum(x_l > z),numeric(1))
-  
+
   pval_valid = compute_pval(l=l,
                             xs=x_l_valid,
                             theta0 = theta0,
                             n_l = n_l,
                             a_l = a_l,
                             c_prev = c_hat_prev)
-  
+
   fdr.est = m_l*pval_valid/pmax(rank_x_l_valid,1L)
   c.hat = ifelse(length(which(fdr.est <= alpha))>0,
                  pval_valid[max(which(fdr.est <= alpha))],
                  a_l)
-  
+
   if(length(which(fdr.est <= alpha))>0){
     #Map discoveries to L1
     rej_l = which(x_l > x_l_valid[max(which(fdr.est <= alpha))])
@@ -327,12 +316,12 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
   } else{
     rej_L1 = NULL
   }
-  
+
   return(list(c.hat=c.hat,rej=rej_L1,m.l=m_l))
 }
 
 compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
-  
+
   f1 <- function(z){
     #sums over the dbinoms for vector of a_{1,r}'s...
     #need row products
@@ -349,24 +338,24 @@ compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
                         f1(valid.counts(w,c.prev=cprev))))
     return(val)
   }
-  
+
   if(l==1){
-    out = pbinom(xs,n_l,theta0,lower.tail = FALSE) 
+    out = pbinom(xs,n_l,theta0,lower.tail = FALSE)
     return(out)
   } else{
-    
+
     z_prev_l = qbinom(c_prev,n_l/2,theta0,lower.tail = FALSE)-1L
     za_prev_l = qbinom(a_l,n_l,theta0,lower.tail = FALSE)-1L
-    
+
     max.x = min(2*z_prev_l,za_prev_l)
-    
+
     out = NULL
-    
+
     for(j in seq_along(xs)){
       min.x = xs[j]
       #print(min.x)
-      
-      if(min.x + 1 > max.x){ 
+
+      if(min.x + 1 > max.x){
         #print("prob = 0")
         prob = 0
         #print(prob)
@@ -379,10 +368,10 @@ compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
       out = c(out,prob)
       #print(out)
     }
-    
+
     return(out)
   }
-  
+
 }
 
 
@@ -397,13 +386,13 @@ expand.mat = function(mat, vec) {
 }
 
 valid.counts = function(x,c.prev){
-  #Outputs a 2-column matrix of valid counts 
+  #Outputs a 2-column matrix of valid counts
   vec = seq(from = 0, to = c.prev)
   mat = matrix(vec, ncol = 1)
-  
+
   mat  = expand.mat(mat, vec)
   mat = mat[rowSums(mat) %in% x, ]
-  
+
   if(!is.matrix(mat)){
     return(mat)
   }
@@ -416,5 +405,4 @@ valid.counts = function(x,c.prev){
     return(lapply(idx, function(i, x) x[i, ], mat))
   }
 }
-
 
