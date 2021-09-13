@@ -11,7 +11,7 @@
  </p>
 
 <div style="text-align:center">
-  <img src="https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/blob/main/inst/TEAM.pdf"  align="middle"/>
+  <img src="https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/blob/main/inst/TEAM.png"  align="middle"/>
 </div>
 
 # Getting started
