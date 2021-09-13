@@ -10,9 +10,7 @@
   
  </p>
 
-<div style="text-align:center">
-  <img src="https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/blob/main/inst/TEAM.png"  align="middle"/>
-</div>
+![TEAM](/uploads/7475dbf686561699ebfc809904dd2d0d/TEAM.png)
 
 # Getting started
 
