@@ -2,11 +2,11 @@ Package: TEAM
 Title: Multiple Hypothesis Testing on an Aggregation Tree Method
 Version: 1.0.0.0
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "John",
+           family = "Pura",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "john.pura@duke.edu",
+           comment = c(ORCID = "0000-0001-5400-980X"))
 Description: `TEAM` is a multiple-testing method that embeds hypothesis testing on an aggregation tree to test hypotheses from fine- to coarse- resolution, while controlling the false discovery rate (FDR). Specifically, we developed `TEAM` as a method to identify where two probability density functions (pdfs) differ. First, `TEAM` partitions the multivariate sample space into bins with the finest resolution. It can accommodate different partitioning schemes. Second, `TEAM` embeds testing on an aggregation tree with user-specified number of layers. The first layer bins are defined by the initial partition, and in each bin, `TEAM` tests if the pdf of one sample is higher than that of the other (e.g. reference). On higher layers, TEAM will gradually aggregate the non-rejected bins and test if the aggregated bins harbor differential pdfs. This fine- to coarse-resolution testing structure not only boosts the testing power, but also pinpoints the regions with differential pdfs at the finest possible resolution. We apply `TEAM` to a flow cytometry study that aims to identify regions of T cell activation, based on multivariate protein marker expression.
 License: GPL-2
 Imports: stats ks ggplot2 plyr data.table dplyr
