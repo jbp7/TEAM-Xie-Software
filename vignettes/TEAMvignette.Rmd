@@ -12,9 +12,10 @@ vignette: >
 
   
 ```{r setup, include = FALSE}
-# library(ggplot2)
-# library(GGally)
-# library(ComplexHeatmap)
+library(dplyr)
+library(ggplot2)
+library(GGally)
+library(ComplexHeatmap)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
