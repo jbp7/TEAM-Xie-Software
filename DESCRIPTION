@@ -33,7 +33,7 @@ Imports:
 Suggests: 
     GGally,
     ComplexHeatmap,
-    dplyr
+    dplyr,
     knitr,
     rmarkdown
 License: GPL-2
