@@ -30,10 +30,10 @@ Imports:
     plyr,
     data.table,
     dplyr
-Suggests:
 Suggests: 
     GGally,
     ComplexHeatmap,
+    dplyr
     knitr,
     rmarkdown
 License: GPL-2
