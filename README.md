@@ -38,6 +38,8 @@ TEAM(partition_info=partition2D,
      alpha=alpha)
 ```
 
+Please see the vignette for details in constructing the partition and the output of the function.
+
 An example 11-color flow cytometry dataset from the External Quality Assurance Program Oversight Laboratory (EQAPOL) program can be loaded using the following call:
 
 ```{r, eval=FALSE}
