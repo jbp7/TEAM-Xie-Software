@@ -6,7 +6,7 @@ Authors@R: c(person("John", "Pura",
     role = c("aut", "cre")),
     person("Jichun", "Xie", 
     email = "jichun.xie@duke.edu",
-    role = c("aut", "cre")))
+    role = c("aut")))
 Description: TEAM is a multiple-testing method that embeds hypothesis testing on an 
     aggregation tree to test hypotheses from fine- to coarse- resolution, while 
     controlling the false discovery rate (FDR). We developed TEAM as a method to identify 
