@@ -21,8 +21,6 @@ knitr::opts_chunk$set(
   comment = "#>"
   
 )
-library(TEAM)
-data("example_eqapol_data")
 ```
 &nbsp;
 
@@ -36,15 +34,22 @@ TEAM is a multiple-testing method that embeds hypothesis testing on an aggregati
 
 # Package installation
 
-If the package TEAM is not installed, install it via CRAN:
+If the package TEAM is not installed, install it via the source file:
   
 ```{r,eval=FALSE}
-install.packages("TEAM")
+install.packages("https://")
 ```
 
 # Basic Usage
+
+We begin by loading the package
+
+```{r, results='hide',message=FALSE,warning=FALSE}
+library(TEAM)
+```
+
 <p align="justify">
-TEAM requires three inputs: a partition on the sample space (see below for details), the maximum number of layers, $L$, for the aggregation tree, and the desired FDR level, $\alpha$.
+TEAM requires three inputs: a partition on the sample space, the maximum number of layers, $L$, for the aggregation tree, and the desired FDR level, $\alpha$. See the examples below for details on creating the partition.
  </p>
  
 ```{r, eval=FALSE}
@@ -56,11 +61,11 @@ TEAM(partition_info=partition2D,
 # Example Dataset
 
 <p align="justify">
-The accompanying dataset `EQAPOL_Ex` is a sample from the External Quality Assurance Program Oversight Laboratory proficiency program by the Duke Immune Profiling Core. The dataset contains the results of a flow-cytometry experiment conducted on a blood sample of a single healthy individual. The blood sample was split into two parts: one was used as a negative control (cohort 1) and the other was stimulated with a peptide mixture from the immunodominant cytomegalovirus (CMV) pp65 protein (cohort 2). Results for each cohort are summarized as data frames labeled `Costim` for cohort 1 and `CMV` for cohort 2. Each data frame contains expression data on approximately 200 thousand cell observations (rows) and 11 protein markers (columns). One can attach the dataset by calling:
+The accompanying dataset `example_equapol_data` is a sample from the External Quality Assurance Program Oversight Laboratory proficiency program by the Duke Immune Profiling Core. The dataset contains the results of a flow-cytometry experiment conducted on a blood sample from a single healthy individual. The blood sample was split into two parts: one was used as a negative control (cohort 1) and the other was stimulated with a peptide mixture from the immunodominant cytomegalovirus (CMV) pp65 protein (cohort 2). Results for each cohort are summarized as data frames labeled `Costim` for cohort 1 and `CMV` for cohort 2. Each data frame contains expression data on approximately 200 thousand cell observations (rows) and 11 protein markers (columns). One can attach the dataset by calling:
  </p>
 
 ```{r, eval=FALSE}
-data(EQAPOL_Ex)
+data("example_eqapol_data")
 ```
 
 # Analysis 1: Identifying differential density regions
