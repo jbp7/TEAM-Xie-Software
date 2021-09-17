@@ -1,6 +1,6 @@
 #' @title Testing on an Aggregation Tree Method
 #' @description This function performs multiple testing embedded in an aggregation tree structure in order to identify local differences between two probability density functions
-#' @importFrom stats ks ggplot2 plyr data.table dplyr
+#' @importFrom stats ks data.table ggplot2 plyr dplyr
 #' @param partition_info Partition for first layer of aggregation tree
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
@@ -119,7 +119,7 @@ ind.1D.each.row <- function(ind.1D,factor){
 #' @param df1 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the reference sample
 #' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the non-reference sample (want to find regions enriched for these observations)
 #' @param m A positive integer specifying the number of bins in layer 1
-#' @import dplyr
+#' @import dplyr ggplot2
 # @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
 # a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
 # the breaks along each dimension for the bins (breaks)
