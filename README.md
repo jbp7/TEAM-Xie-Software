@@ -42,7 +42,7 @@ The procedure can be run as follows:
 </p>
  
 ```{r, eval=FALSE}
-TEAM(partition_info=partition2D,
+TEAM(partition_info=partition,
      L=L,
      alpha=alpha)
 ```
