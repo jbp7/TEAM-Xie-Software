@@ -36,10 +36,10 @@ Imports:
 Suggests: 
     GGally,
     ComplexHeatmap,
-    dplyr,
-    knitr,
-    rmarkdown
+    knitr
+VignettBuilder: knitr
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+
 BugReports: https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/issues
