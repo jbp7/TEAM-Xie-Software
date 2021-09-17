@@ -16,14 +16,23 @@
 
 ## Installation
 
-If the package TEAM is not installed, install it via CRAN:
+TEAM may be installed from GitLab via the `remotes` package:
   
 ```{r,eval=FALSE}
-install.packages("TEAM")
+install.packages("remotes")
+remotes::install_gitlab(
+  repo = "jichunxie/Xie-lab-software_TEAM",
+  subdir = "TEAM",
+  host = "gitlab.oit.duke.edu",
+  build_vignettes = FALSE,
+  build_manual = TRUE)
 ```
 ## Documentation
 
-[Insert vignette information]
+A detailed vignette containing examples of how to use TEAM can be viewed by calling:
+```{r,eval=FALSE}
+browseVignettes("TEAM")
+```
 
 ## Basic Usage
 <p align="justify">
@@ -43,7 +52,7 @@ Please see the vignette for details in constructing the partition and the output
 An example 11-color flow cytometry dataset from the External Quality Assurance Program Oversight Laboratory (EQAPOL) program can be loaded using the following call:
 
 ```{r, eval=FALSE}
-data(EQAPOL_Ex)
+data(example_eqapol_data)
 ```
 
 # Paper
