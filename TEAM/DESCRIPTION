@@ -22,7 +22,10 @@ Description: TEAM is a multiple-testing method that embeds hypothesis testing on
     apply TEAM to a flow cytometry study that aims to identify regions of T cell activation, 
     based on multivariate protein marker expression.
 Depends:
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    ggplot2,
+    data.table,
+    dplyr
 Imports: 
     stats,
     ks,
