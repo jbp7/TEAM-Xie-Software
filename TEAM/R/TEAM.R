@@ -104,6 +104,7 @@ TEAM = function(partition_info,alpha,L){
 
 ##### Helper Functions #####
 
+#' ind.1D.each.row
 ind.1D.each.row <- function(ind.1D,factor){
   if(all(ind.1D%%factor==0,na.rm=TRUE)){
     return(ind.1D/factor)
@@ -122,7 +123,8 @@ ind.1D.each.row <- function(ind.1D,factor){
 #' @import dplyr ggplot2
 # @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
 # a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
-# the breaks along each dimension for the bins (breaks)
+# the breaks along each dimension for the bins
+#' @export create_partition_info
 create_partition_info <- function(df1,df2,m){
 
   N1 = nrow(df1)
@@ -235,7 +237,7 @@ create_partition_info <- function(df1,df2,m){
 }
 
 #' create.xy.breaks
-#' @import dplyr
+#' @import stats dplyr
 create.xy.breaks <- function(dat,m,first.axis){
 
   if(first.axis==1){
@@ -266,6 +268,7 @@ create.xy.breaks <- function(dat,m,first.axis){
   return(list(x=brk.x,y=brk.y,first.axis=first.axis))
 }
 
+#' matsplitter
 matsplitter<-function(M, r, c) {
   rg <- (row(M)-1)%/%r+1 # %/% = divide and round up
   cg <- (col(M)-1)%/%c+1
@@ -274,6 +277,8 @@ matsplitter<-function(M, r, c) {
   lapply(1:N, function(x) M[rci==x])
 }
 
+#' run_proc
+#' @importFrom stats
 run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 
   Ll <- paste0("L",l)
@@ -321,6 +326,8 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
   return(list(c.hat=c.hat,rej=rej_L1,m.l=m_l))
 }
 
+#' compute_pval
+#' @importFrom stats
 compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
 
   f1 <- function(z){
@@ -375,7 +382,7 @@ compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
 
 }
 
-
+#' expand.mat
 expand.mat = function(mat, vec) {
   #### print(paste(nrow(mat),length(vec)))
   #### print(paste("nrow=",nrow(mat)))
@@ -386,6 +393,7 @@ expand.mat = function(mat, vec) {
   return(out)
 }
 
+#' valid.counts
 valid.counts = function(x,c.prev){
   #Outputs a 2-column matrix of valid counts
   vec = seq(from = 0, to = c.prev)

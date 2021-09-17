@@ -24,7 +24,7 @@ remotes::install_gitlab(
   repo = "jichunxie/Xie-lab-software_TEAM",
   subdir = "TEAM",
   host = "gitlab.oit.duke.edu",
-  build_vignettes = FALSE,
+  build_vignettes = TRUE,
   build_manual = TRUE)
 ```
 ## Documentation
