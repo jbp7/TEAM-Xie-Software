@@ -23,6 +23,7 @@ Description: TEAM is a multiple-testing method that embeds hypothesis testing on
     based on multivariate protein marker expression.
 Depends:
     R (>= 3.5.0),
+    utils,
     stats,
     ggplot2,
     data.table,
@@ -36,6 +37,6 @@ Suggests:
 VignettBuilder: knitr
 License: GPL-2
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 BugReports: https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/issues
 RoxygenNote: 7.1.2
