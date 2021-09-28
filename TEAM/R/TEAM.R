@@ -104,16 +104,6 @@ TEAM = function(partition_info,alpha,L){
 
 ##### Helper Functions #####
 
-#' ind.1D.each.row
-ind.1D.each.row <- function(ind.1D,factor){
-  if(all(ind.1D%%factor==0,na.rm=TRUE)){
-    return(ind.1D/factor)
-  }
-  else{
-    return(floor(ind.1D/factor)+1)
-  }
-}
-
 #' create_partition_info
 #' Creates a partition of the 1D or 2D sample space of the pooled observations into mutually disjoint bins.
 #' The bins form the leaves or finest-level regions for layer 1 of the aggregation tree.
