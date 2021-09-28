@@ -238,6 +238,9 @@ create_partition_info <- function(df1,df2,m){
 
 #' create.xy.breaks
 #' @import stats dplyr
+#' @param dat input \code{\link{data.frame}} of observations
+#' @param m number of bins
+#' @param first.axis first axis to partition
 create.xy.breaks <- function(dat,m,first.axis){
 
   if(first.axis==1){
@@ -269,6 +272,9 @@ create.xy.breaks <- function(dat,m,first.axis){
 }
 
 #' matsplitter
+#' @param M matrix
+#' @param r number of rows to split
+#' @param c number of columns to split
 matsplitter<-function(M, r, c) {
   rg <- (row(M)-1)%/%r+1 # %/% = divide and round up
   cg <- (col(M)-1)%/%c+1
@@ -279,6 +285,12 @@ matsplitter<-function(M, r, c) {
 
 #' run_proc
 #' @importFrom stats
+#' @param l current layer
+#' @param n bin size
+#' @param partition_info_l updated partition information at current layer
+#' @param theta0 proportion of cohort 2 to total
+#' @param c_hat_prev count that controls FDR at previous layer l-1
+#' @param alpha nominal FDR level
 run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 
   Ll <- paste0("L",l)
@@ -328,6 +340,12 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 
 #' compute_pval
 #' @importFrom stats
+#' @param l current layer
+#' @param xs vector of counts
+#' @param theta0 proportion of cohort 2 to total
+#' @param n_l bin size at current layer
+#' @param a_l max rejection count at current layer
+#' @param c_prev count that controls FDR at previous layer l-1
 compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
 
   f1 <- function(z){
@@ -383,6 +401,8 @@ compute_pval <- function(l,xs,theta0,n_l,a_l,c_prev){
 }
 
 #' expand.mat
+#' @param mat matrix of counts
+#' @param vec vector of counts
 expand.mat = function(mat, vec) {
   #### print(paste(nrow(mat),length(vec)))
   #### print(paste("nrow=",nrow(mat)))
@@ -394,6 +414,8 @@ expand.mat = function(mat, vec) {
 }
 
 #' valid.counts
+#' @param x count
+#' @param c.prev count that controls FDR at previous layer l-1
 valid.counts = function(x,c.prev){
   #Outputs a 2-column matrix of valid counts
   vec = seq(from = 0, to = c.prev)
