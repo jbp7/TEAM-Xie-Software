@@ -49,7 +49,7 @@ TEAM(partition_info=partition,
 
 Please see the vignette for details in constructing the partition and the output of the function.
 
-An example 11-color flow cytometry dataset from the External Quality Assurance Program Oversight Laboratory (EQAPOL) program can be loaded from our GitLab repository by calling:
+An example flow cytometry dataset from the External Quality Assurance Program Oversight Laboratory (EQAPOL) program can be loaded from our GitLab repository by calling:
 
 ```{r, eval=FALSE}
 URL <- "https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/raw/main/TEAM/data/example_eqapol_data.rda"

@@ -38,7 +38,7 @@ We begin by loading the package
 library(TEAM)
 ```
 
-Below we demonstrate two examples of using TEAM on an example dataset. The data can be download directly from Gitlab by calling:
+Below we demonstrate two examples of using TEAM on an example dataset. The data can be downloaded directly from Gitlab and loaded by calling:
 
 ```{r, eval=FALSE}
 URL <- "https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/raw/main/TEAM/data/example_eqapol_data.rda"
