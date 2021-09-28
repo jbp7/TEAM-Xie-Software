@@ -38,10 +38,12 @@ We begin by loading the package
 library(TEAM)
 ```
 
-Below we demonstrate two examples of using TEAM on an example dataset. One can attach the dataset by calling:
+Below we demonstrate two examples of using TEAM on an example dataset. The data can be download directly from Gitlab by calling:
 
 ```{r, eval=FALSE}
-data(example_eqapol_data)
+URL <- "https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/raw/main/TEAM/data/example_eqapol_data.rda"
+download.file(URL,"example_eqapol_data.rda", method="curl")
+load("example_eqapol_data.rda")
 ```
 
 # Example Dataset
@@ -231,7 +233,8 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 
 <!-- <p align="justify"> -->
 
-<!-- TEAM is designed to identify the differential density regions or areas where activated cells are enriched. However, it cannot directly phenotype the functionality of individual, activated cells. On the other hand, we may estimate the phenotype of certain enriched sets comprised of these activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional.  -->
+<!-- TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional. 
+  -->
 
 <!-- In this example, we look at the subspaces defined by pairwise combinations of four functional markers from above: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. We apply TEAM to each of the six bivariate subspaces spanned by these markers. Monofunctional enriched cell sets (activated in one marker) are expected to belong to three or four of these subspaces. Bifunctional enriched cell sets (activated in two markers) are expected to belong to five out of the six subspaces. Finally, polyfunctional enriched cell sets (activated in at least three markers) are expected to belong to all six subspaces. -->
 
