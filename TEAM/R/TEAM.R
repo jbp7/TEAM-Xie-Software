@@ -111,9 +111,9 @@ TEAM = function(partition_info,alpha,L){
 #' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the non-reference sample (want to find regions enriched for these observations)
 #' @param m A positive integer specifying the number of bins in layer 1
 #' @import dplyr ggplot2
-# @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
-# a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
-# the breaks along each dimension for the bins
+#' @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
+#' a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
+#' the breaks along each dimension for the bins
 #' @export create_partition_info
 create_partition_info <- function(df1,df2,m){
 
