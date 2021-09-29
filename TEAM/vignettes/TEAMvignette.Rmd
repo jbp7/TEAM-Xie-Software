@@ -1,9 +1,10 @@
 ---
 title: "Identifying Differential Density Regions with TEAM"
 #author: "John Pura"
-data: "`r Sys.Date()`"
+date: "`r Sys.Date()`"
+package: "TEAM"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
     toc: true 
     toc_depth : 2  
 vignette: >
@@ -16,6 +17,8 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warnings = FALSE,
+  messages = FALSE,
   comment = "#>"
 )
 ```

@@ -1,6 +1,6 @@
 Package: TEAM
 Title: Multiple Hypothesis Testing on an Aggregation Tree Method
-Version: 0.5.0
+Version: 0.99.0
 Authors@R: c(person("John", "Pura",
     email = "john.pura@duke.edu",
     role = c("aut", "cre")),
@@ -40,7 +40,7 @@ Suggests:
     ComplexHeatmap,
     knitr,
     rmarkdown
-VignettBuilder: knitr
+VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: false

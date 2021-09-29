@@ -15,8 +15,9 @@ TEAM(partition_info, alpha, L)
 }
 \value{
 A \code{\link{list}} containing the number of pooled observations in
-each bin (n), the number of bins/leaves at each layer (m.l), the discoveries
-(S.list) in each layer and the estimated layer-specific thresholds (c.hats)
+each bin (n), the number of bins/leaves at each layer (m.l), the indices of
+discovered leaves/layer 1 bins (S.list) in each layer and the estimated
+layer-specific thresholds (c.hats)
 }
 \description{
 This function performs multiple testing embedded in an

@@ -1,4 +1,5 @@
 #' @title Testing on an Aggregation Tree Method
+#' @name
 #' @description This function performs multiple testing embedded in an
 #' aggregation tree structure in order to identify local differences between two
 #' probability density functions
@@ -7,8 +8,9 @@
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
 #' @return A \code{\link{list}} containing the number of pooled observations in
-#' each bin (n), the number of bins/leaves at each layer (m.l), the discoveries
-#' (S.list) in each layer and the estimated layer-specific thresholds (c.hats)
+#' each bin (n), the number of bins/leaves at each layer (m.l), the indices of
+#' discovered leaves/layer 1 bins (S.list) in each layer and the estimated
+#' layer-specific thresholds (c.hats)
 #' @references Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm
 #' on the Aggregation Tree for Flow Cytometry Analysis
 #' \url{https://arxiv.org/abs/1906.07757}
