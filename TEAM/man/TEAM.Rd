@@ -25,7 +25,8 @@ probability density functions
 }
 \examples{
 ## Example with 1D pdfs: find where case density is higher than control
-density
+# density
+require(ks)
 set.seed(1)
 # Simulate local shift difference for each sample from mixture of normals
 # Uses rnorm.mixt from ks library

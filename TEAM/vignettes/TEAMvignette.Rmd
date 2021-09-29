@@ -8,7 +8,7 @@ output:
     toc_depth : 2  
 vignette: >
   %\VignetteIndexEntry{Identifying Differential Density Regions with TEAM}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 

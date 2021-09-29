@@ -2,9 +2,7 @@
 #' @description This function performs multiple testing embedded in an
 #' aggregation tree structure in order to identify local differences between two
 #' probability density functions
-#' @importFrom ks norm.mixt
-#' @importFrom dplyr between
-#' @import data.table
+#' @importFrom data.table setDT := rleid uniqueN between
 #' @param partition_info Partition for first layer of aggregation tree
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
@@ -16,7 +14,8 @@
 #' \url{https://arxiv.org/abs/1906.07757}
 #' @examples
 #' ## Example with 1D pdfs: find where case density is higher than control
-#' density
+#' # density
+#' require(ks)
 #' set.seed(1)
 #' # Simulate local shift difference for each sample from mixture of normals
 #' # Uses rnorm.mixt from ks library
@@ -114,18 +113,18 @@ TEAM = function(partition_info,alpha,L){
 ##### Helper Functions #####
 
 #' create_partition_info
-#' Creates a partition of the 1D or 2D sample space of the pooled observations
-#' into mutually disjoint bins.
-#' The bins form the leaves or finest-level regions for layer 1 of the
-#' aggregation tree.
+#' @description Creates a partition of the 1D or 2D sample space of the pooled
+#' observations into mutually disjoint bins. The bins form the leaves or
+#' finest-level regions for layer 1 of the aggregation tree.
 #' @param df1 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
 #' corresponding to the reference sample
 #' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
 #' corresponding to the non-reference sample (want to find regions enriched
 #' for these observations)
 #' @param m A positive integer specifying the number of bins in layer 1
-#' @importFrom dplyr arrange
-#' @importFrom stats aggregate quantile
+#' @importFrom rlang .data
+#' @importFrom dplyr arrange %>%
+#' @importFrom stats aggregate quantile var
 #' @importFrom ggplot2 cut_number
 #' @return A \code{\link{list}} containing the the pooled observation
 #' \code{\link{data.frame}} (dat),
@@ -206,7 +205,7 @@ create_partition_info <- function(df1,df2,m){
                         n = n,
                         x = x
       ) %>%
-        arrange(indx)
+        arrange(.data$indx)
     } else{
       y.bds <- NULL
       for(i in seq(length(breaks$y)-1)){
@@ -229,7 +228,7 @@ create_partition_info <- function(df1,df2,m){
                         n = n,
                         x = x
       ) %>%
-        arrange(indx)
+        arrange(.data$indx)
     }
 
   }
@@ -247,7 +246,7 @@ create_partition_info <- function(df1,df2,m){
 
 #' create.xy.breaks
 #' @importFrom stats quantile aggregate
-#' @importFrom dplyr between
+#' @importFrom data.table between
 #' @param dat input \code{\link{data.frame}} of observations
 #' @param m number of bins
 #' @param first.axis first axis to partition
@@ -294,7 +293,7 @@ matsplitter<-function(M, r, c) {
 }
 
 #' run_proc
-#' @import stats
+#' @importFrom stats as.formula aggregate
 #' @param l current layer
 #' @param n bin size
 #' @param partition_info_l updated partition information at current layer
@@ -350,7 +349,7 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 }
 
 #' compute_pval
-#' @import stats
+#' @importFrom stats dbinom pbinom qbinom
 #' @param l current layer
 #' @param xs vector of counts
 #' @param theta0 proportion of cohort 2 to total
@@ -447,4 +446,8 @@ valid.counts = function(x,c.prev){
     return(lapply(idx, function(i, x) x[i, ], mat))
   }
 }
+
+#' Resolve NOTEs during package building
+#' @import utils
+globalVariables(c("L1",".N","indx"))
 

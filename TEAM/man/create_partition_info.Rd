@@ -2,11 +2,7 @@
 % Please edit documentation in R/TEAM.R
 \name{create_partition_info}
 \alias{create_partition_info}
-\title{create_partition_info
-Creates a partition of the 1D or 2D sample space of the pooled observations
-into mutually disjoint bins.
-The bins form the leaves or finest-level regions for layer 1 of the
-aggregation tree.}
+\title{create_partition_info}
 \usage{
 create_partition_info(df1, df2, m)
 }
@@ -28,9 +24,7 @@ each bin and their layer 1 indices (bin.df),
 the breaks along each dimension for the bins
 }
 \description{
-create_partition_info
-Creates a partition of the 1D or 2D sample space of the pooled observations
-into mutually disjoint bins.
-The bins form the leaves or finest-level regions for layer 1 of the
-aggregation tree.
+Creates a partition of the 1D or 2D sample space of the pooled
+observations into mutually disjoint bins. The bins form the leaves or
+finest-level regions for layer 1 of the aggregation tree.
 }
