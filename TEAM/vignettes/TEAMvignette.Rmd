@@ -373,10 +373,9 @@ We plotted the T cell CD3 vs. CD14-CD19 protein distributions in the form of con
 
 ```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 8, fig.asp = 0.33}
 
-names(example_eqapol_data$CMV)[7:17] <- c("CD57","CD4","CD14-CD19","CD3",
-                        "CD27","TNFa",
-                        "CD8","IL-2","CD45RO",
-                        "CD107","IFNg")
+names(example_eqapol_data$CMV) <- c("CD3","CD14-CD19",
+                                    "TNFa","CD107",
+                                    "IFNg","IL-2")
 
 
 cohort2_all_markers_df <- example_eqapol_data$CMV %>%
