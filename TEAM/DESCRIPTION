@@ -38,7 +38,8 @@ Suggests:
     ks,
     GGally,
     ComplexHeatmap,
-    knitr
+    knitr,
+    rmarkdown
 VignettBuilder: knitr
 License: GPL-3
 Encoding: UTF-8

@@ -1,14 +1,14 @@
 ---
 title: "Identifying Differential Density Regions with TEAM"
-author: "John Pura, Xuechan Li, Cliburn Chan, Jichun Xie"
+author: "John Pura"
 data: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
-    toc: true # table of content true
+    toc: true 
     toc_depth : 2  
 vignette: >
   %\VignetteIndexEntry{Identifying Differential Density Regions with TEAM}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
