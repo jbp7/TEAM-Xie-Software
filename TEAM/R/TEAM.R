@@ -468,9 +468,9 @@ create.boxes2D <- function(partition_info,lim,xll,xul,yll,yul){
   lower.y =  as.numeric(sub(".]*", "", sub(",.*", "", bin.df$y.bd)))
   upper.y = as.numeric(sub("].*", "", sub(".*,", "", bin.df$y.bd)))
 
-  m = bin_info$m
+  m = partition_info$m
 
-  if(bin_info$first.axis==1){ #Partition along x-axis first
+  if(partition_info$first.axis==1){ #Partition along x-axis first
 
     which.lower.x <- seq(m)
     which.upper.x <- tail(seq(m^2),m)
