@@ -233,237 +233,237 @@ ggplot(subj_eqapol,
     theme_light()
 ```
 
-<!-- # Analysis 2: Identifying enriched sets of functional cells -->
+# Analysis 2: Identifying enriched sets of functional cells
 
-<!-- <p align="justify"> -->
+<p align="justify">
 
-<!-- =TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional. -->
+=TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional.
 
 
-<!-- In this example, we look at the subspaces defined by pairwise combinations of four functional markers from above: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. We apply TEAM to each of the six bivariate subspaces spanned by these markers. Monofunctional enriched cell sets (activated in one marker) are expected to belong to three or four of these subspaces. Bifunctional enriched cell sets (activated in two markers) are expected to belong to five out of the six subspaces. Finally, polyfunctional enriched cell sets (activated in at least three markers) are expected to belong to all six subspaces. -->
+In this example, we look at the subspaces defined by pairwise combinations of four functional markers from above: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. We apply TEAM to each of the six bivariate subspaces spanned by these markers. Monofunctional enriched cell sets (activated in one marker) are expected to belong to three or four of these subspaces. Bifunctional enriched cell sets (activated in two markers) are expected to belong to five out of the six subspaces. Finally, polyfunctional enriched cell sets (activated in at least three markers) are expected to belong to all six subspaces.
 
-<!-- </p> -->
+</p>
 
-<!-- ## Setup the subanalyses -->
-<!-- <p align="justify"> -->
+## Setup the subanalyses
+<p align="justify">
 
-<!-- First we generate all the bivariate combinations of the four markers that will be used to specify the subanalyses. -->
-<!-- </p> -->
+First we generate all the bivariate combinations of the four markers that will be used to specify the subanalyses.
+</p>
 
-<!-- ```{r pairwisecomb} -->
-<!-- func_comb <- combn(func_channel_names,2) -->
+```{r pairwisecomb}
+func_comb <- combn(func_channel_names,2)
 
-<!-- func_comb -->
-<!-- ``` -->
+func_comb
+```
 
-<!-- ## Run TEAM for each subanalysis -->
+## Run TEAM for each subanalysis
 
-<!-- <p align="justify"> -->
+<p align="justify">
 
-<!-- Next, we run TEAM on each bivariate subspace to identify differential density regions, i.e. regions where the the CMV-stimulated cell (cohort 2) density is overexpressed compared to the control cell (cohort 1) density. The main object is `cell_list_TEAM`, which is a list of the cells in the differential density regions that were identified in each of the six subanalyses. TEAM is run to 3 layers with a target FDR of 0.05. -->
+Next, we run TEAM on each bivariate subspace to identify differential density regions, i.e. regions where the the CMV-stimulated cell (cohort 2) density is overexpressed compared to the control cell (cohort 1) density. The main object is `cell_list_TEAM`, which is a list of the cells in the differential density regions that were identified in each of the six subanalyses. TEAM is run to 3 layers with a target FDR of 0.05.
 
-<!-- </p> -->
+</p>
 
-<!-- ```{r,message=FALSE,warning=FALSE} -->
+```{r,message=FALSE,warning=FALSE}
 
-<!-- #Initialize output object -->
-<!-- cell_list_TEAM = vector("list",ncol(func_comb)) -->
+#Initialize output object
+cell_list_TEAM = vector("list",ncol(func_comb))
 
-<!-- for (j in seq(ncol(func_comb))){ -->
+for (j in seq(ncol(func_comb))){
 
-<!--   #print(func_channel_names[j]) -->
-<!--   x1 = example_eqapol_data$Costim[[func_comb[1,j]]] -->
-<!--   y1 = example_eqapol_data$Costim[[func_comb[2,j]]] -->
-<!--   x2 = example_eqapol_data$CMV[[func_comb[1,j]]] -->
-<!--   y2 = example_eqapol_data$CMV[[func_comb[2,j]]] -->
+  #print(func_channel_names[j])
+  x1 = example_eqapol_data$Costim[[func_comb[1,j]]]
+  y1 = example_eqapol_data$Costim[[func_comb[2,j]]]
+  x2 = example_eqapol_data$CMV[[func_comb[1,j]]]
+  y2 = example_eqapol_data$CMV[[func_comb[2,j]]]
 
-<!--   N1 = length(x1) -->
-<!--   N2 = length(x2) -->
+  N1 = length(x1)
+  N2 = length(x2)
 
-<!--   #Choose number of bins based on theoretically sound value -->
-<!--   m = round(((N1+N2)^2/2)^(1/6)) -->
+  #Choose number of bins based on theoretically sound value
+  m = round(((N1+N2)^2/2)^(1/6))
 
 
-<!--   cohort1_df <- data.frame(X=x1,Y=y1) -->
-<!--   cohort2_df <- data.frame(X=x2,Y=y2) -->
+  cohort1_df <- data.frame(X=x1,Y=y1)
+  cohort2_df <- data.frame(X=x2,Y=y2)
 
-<!--   #Create partition object -->
-<!--   partition2D <- create_partition_info(df1=cohort1_df, -->
-<!--                                        df2=cohort2_df, -->
-<!--                                        m=m) -->
+  #Create partition object
+  partition2D <- create_partition_info(df1=cohort1_df,
+                                       df2=cohort2_df,
+                                       m=m)
 
-<!--   #Run TEAM to three layers -->
-<!--   res <- TEAM(partition_info=partition2D, -->
-<!--               L=3, -->
-<!--               alpha=0.05) -->
+  #Run TEAM to three layers
+  res <- TEAM(partition_info=partition2D,
+              L=3,
+              alpha=0.05)
 
 
-<!--   #Label each cell based on the bin ID -->
-<!--   #This may be a little slow -->
-<!--   df.all <- partition2D$dat -->
-<!--   box.mats <- create.boxes2D(partition_info = partition2D,lim=1e6) -->
-<!--   rownames(df.all) <- NULL -->
+  #Label each cell based on the bin ID
+  #This may be a little slow
+  df.all <- partition2D$dat
+  box.mats <- create.boxes2D(partition_info = partition2D,lim=1e6)
+  rownames(df.all) <- NULL
 
-<!--   df.all$box.indx <- rep(NA,N1+N2) -->
-<!--   for(k in seq(nrow(box.mats))){ -->
-<!--     which.obs <- which((df.all$X>=box.mats[k,1] & df.all$X< box.mats[k,3]) & -->
-<!--                          (df.all$Y>=box.mats[k,2] & df.all$Y< box.mats[k,4])) -->
-<!--     df.all$box.indx[which.obs] <- k -->
-<!--   } -->
+  df.all$box.indx <- rep(NA,N1+N2)
+  for(k in seq(nrow(box.mats))){
+    which.obs <- which((df.all$X>=box.mats[k,1] & df.all$X< box.mats[k,3]) &
+                         (df.all$Y>=box.mats[k,2] & df.all$Y< box.mats[k,4]))
+    df.all$box.indx[which.obs] <- k
+  }
 
-<!--   df2 <- subset(df.all,lab==1) -->
+  df2 <- subset(df.all,lab==1)
 
-<!--   #Cohort 2 cell ID's discovered in each subanalysis -->
-<!--   cohort2ID <- tail(seq(N1+N2),N2) -->
+  #Cohort 2 cell ID's discovered in each subanalysis
+  cohort2ID <- tail(seq(N1+N2),N2)
 
-<!--   #Subtract off N1 to get cohort 2 IDs since cohort 1 and cohort 2 observations are stacked -->
-<!--   #on top of each other internally within TEAM -->
-<!--   cell_list_TEAM[[j]] = unique(c(unlist(cell_list_TEAM[[j]]), -->
-<!--                                         cohort2ID[which(df2$box.indx%in%res$S.list[[3]])])) - N1 -->
-<!-- } -->
+  #Subtract off N1 to get cohort 2 IDs since cohort 1 and cohort 2 observations are stacked
+  #on top of each other internally within TEAM
+  cell_list_TEAM[[j]] = unique(c(unlist(cell_list_TEAM[[j]]),
+                                        cohort2ID[which(df2$box.indx%in%res$S.list[[3]])])) - N1
+}
 
-<!-- ``` -->
+```
 
-<!-- ## Post-processing -->
+## Post-processing
 
-<!-- <p align="justify"> -->
+<p align="justify">
 
-<!-- Several functions from the `ComplexHeatmap` package can be used to efficiently compute intersections of individual cells within rejected regions across the six subanalyses. We can then phenotype enriched cell sets accordingly, based on cell intersections between the six subanalyses. -->
+Several functions from the `ComplexHeatmap` package can be used to efficiently compute intersections of individual cells within rejected regions across the six subanalyses. We can then phenotype enriched cell sets accordingly, based on cell intersections between the six subanalyses.
 
-<!-- </p> -->
+</p>
 
-<!-- ```{r postproc,message=FALSE,warning=FALSE} -->
-<!-- library(ComplexHeatmap) -->
+```{r postproc,message=FALSE,warning=FALSE}
+library(ComplexHeatmap)
 
-<!-- func_comb_names <- apply(func_comb,2,function(x) paste(x[1],"+",x[2])) -->
+func_comb_names <- apply(func_comb,2,function(x) paste(x[1],"+",x[2]))
 
-<!-- data_TEAM = list(cell_list_TEAM[[1]], -->
-<!--                  cell_list_TEAM[[2]], -->
-<!--                  cell_list_TEAM[[3]], -->
-<!--                  cell_list_TEAM[[4]], -->
-<!--                  cell_list_TEAM[[5]], -->
-<!--                  cell_list_TEAM[[6]]) -->
+data_TEAM = list(cell_list_TEAM[[1]],
+                 cell_list_TEAM[[2]],
+                 cell_list_TEAM[[3]],
+                 cell_list_TEAM[[4]],
+                 cell_list_TEAM[[5]],
+                 cell_list_TEAM[[6]])
 
-<!-- names(data_TEAM) = func_comb_names -->
+names(data_TEAM) = func_comb_names
 
-<!-- #Count the number of times each cell was included in a differential density region -->
-<!-- combmat = ComplexHeatmap::make_comb_mat(data_TEAM,mode="distinct") -->
+#Count the number of times each cell was included in a differential density region
+combmat = ComplexHeatmap::make_comb_mat(data_TEAM,mode="distinct")
 
-<!-- comb_deg = ComplexHeatmap::comb_degree(combmat) -->
+comb_deg = ComplexHeatmap::comb_degree(combmat)
 
-<!-- intersect1 <- unlist(lapply(names(comb_deg[comb_deg==1]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-<!-- intersect2 <- unlist(lapply(names(comb_deg[comb_deg==2]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-<!-- intersect3 <- unlist(lapply(names(comb_deg[comb_deg==3]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-<!-- intersect4 <- unlist(lapply(names(comb_deg[comb_deg==4]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-<!-- intersect5 <- unlist(lapply(names(comb_deg[comb_deg==5]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-<!-- intersect6 <- unlist(lapply(names(comb_deg[comb_deg==6]), -->
-<!--                             function(x) ComplexHeatmap::extract_comb(combmat,x))) -->
-
-<!-- ``` -->
-
-
-<!-- ## Visualize results -->
-
-<!-- We plotted the T cell CD3 vs. CD14-CD19 protein distributions in the form of contour plots. We randomly sampled 50,000 cells in the non-differential regions and plotted their densities in black contours. The monofunctional, bifunctional, and polyfunctional enriched-cell sets are defined above. The densities of the enriched-set cell expressions are plotted in red contours.  These plots show that CD3, a T cell co-receptor (TCR), is down-regulated as the cells become more activated. -->
-
-<!-- ```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 8, fig.asp = 0.33} -->
-
-<!-- names(example_eqapol_data$CMV)[7:17] <- c("CD57","CD4","CD14-CD19","CD3", -->
-<!--                         "CD27","TNFa", -->
-<!--                         "CD8","IL-2","CD45RO", -->
-<!--                         "CD107","IFNg") -->
-
-
-<!-- cohort2_all_markers_df <- example_eqapol_data$CMV %>% -->
-<!--   dplyr::mutate(disc_comb_label = case_when(row_number()%in%intersect1~ 1, -->
-<!--                                             row_number()%in%intersect2~ 2, -->
-<!--                                             row_number()%in%intersect3~ 3, -->
-<!--                                             row_number()%in%intersect4~ 4, -->
-<!--                                             row_number()%in%intersect5~ 5, -->
-<!--                                             row_number()%in%intersect6 ~6, -->
-<!--                                             TRUE ~ 0), -->
-<!--                 disc_comb_label_grp2 = case_when((disc_comb_label%in%c(3,4))~1, -->
-<!--                                                  (disc_comb_label==5)~2, -->
-<!--                                                  (disc_comb_label==6)~3) -->
-<!--   ) %>% -->
-<!--   dplyr::arrange(disc_comb_label) #Sort by number of experiments -->
-
-<!-- #Activated cells -->
-<!-- cohort2_all_markers_df_act <- cohort2_all_markers_df %>% -->
-<!--   subset(!is.na(disc_comb_label_grp2)) -->
-
-<!-- #Non-activated cells -->
-<!-- #Add disc_comb_label_grp2 to match labeller values -->
-<!-- cohort2_all_markers_df_non_act1 <- cohort2_all_markers_df %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=1) -->
-
-<!-- cohort2_all_markers_df_non_act2 <- cohort2_all_markers_df %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=2) -->
-
-<!-- cohort2_all_markers_df_non_act3 <- cohort2_all_markers_df %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=3) -->
-
-<!-- cohort2_all_markers_df_non_act <- do.call("rbind",list(cohort2_all_markers_df_non_act1, -->
-<!--                                                        cohort2_all_markers_df_non_act2, -->
-<!--                                                        cohort2_all_markers_df_non_act3)) -->
-
-
-<!-- cohort2_all_markers_df_sub_gt0 <- subset(cohort2_all_markers_df,disc_comb_label>0) -->
-
-<!-- #Sub-sample for faster plotting -->
-<!-- set.seed(1234) -->
-<!-- sample_case_indx <- sample(nrow(cohort2_all_markers_df),50000) -->
-
-<!-- cohort2_all_markers_df_sub0_12 <- cohort2_all_markers_df[sample_case_indx,] %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=1) -->
-
-<!-- cohort2_all_markers_df_sub0_22 <- cohort2_all_markers_df[sample_case_indx,] %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=2) -->
-
-<!-- cohort2_all_markers_df_sub0_32 <- cohort2_all_markers_df[sample_case_indx,] %>% -->
-<!--   dplyr::filter(disc_comb_label==0) %>% -->
-<!--   dplyr::mutate(disc_comb_label_grp2=3) -->
-
-
-<!-- cohort2_all_markers_df_sub0_2 <- do.call("rbind",list(cohort2_all_markers_df_sub0_12, -->
-<!--                                             cohort2_all_markers_df_sub0_22, -->
-<!--                                             cohort2_all_markers_df_sub0_32)) -->
-
-
-<!-- to_string <- as_labeller(c(`1` = "Monofunctional", -->
-<!--                            `2` = "Bifunctional", -->
-<!--                            `3` = "Polyfunctional")) -->
-
-<!-- ggplot() + -->
-<!--   facet_grid(~disc_comb_label_grp2,space = "free",labeller = to_string,drop=TRUE)+ -->
-<!--   stat_density_2d(data = cohort2_all_markers_df_sub_gt0[!is.na(cohort2_all_markers_df_sub_gt0$disc_comb_label_grp2),], -->
-<!--                   geom = "polygon", contour = TRUE, -->
-<!--                   aes(x=`CD14-CD19`,y=CD3,fill = after_stat(level)), -->
-<!--                   bins = 10) + -->
-<!--   scale_fill_distiller(palette = "Reds", direction = 1) + -->
-<!--   geom_density_2d(data=cohort2_all_markers_df_sub0_2, -->
-<!--                   aes(x=`CD14-CD19`,y=CD3,alpha=..level..), -->
-<!--                   color="black", -->
-<!--                   bins = 50) + -->
-<!--   scale_alpha(name="Non-enriched Set \nCell Density") + -->
-<!--   labs(fill="Enriched Set \nCell Density") + -->
-<!--   theme_light() + -->
-<!--   guides(alpha = guide_legend(order = 1)) + -->
-<!--   theme(strip.placement = "outside", -->
-<!--         strip.text = element_text(size = 14,colour = "black"), -->
-<!--         axis.title.x = element_text(size=14), -->
-<!--         axis.title.y = element_text(size=14)) -->
-<!-- ``` -->
+intersect1 <- unlist(lapply(names(comb_deg[comb_deg==1]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+intersect2 <- unlist(lapply(names(comb_deg[comb_deg==2]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+intersect3 <- unlist(lapply(names(comb_deg[comb_deg==3]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+intersect4 <- unlist(lapply(names(comb_deg[comb_deg==4]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+intersect5 <- unlist(lapply(names(comb_deg[comb_deg==5]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+intersect6 <- unlist(lapply(names(comb_deg[comb_deg==6]),
+                            function(x) ComplexHeatmap::extract_comb(combmat,x)))
+
+```
+
+
+## Visualize results
+
+We plotted the T cell CD3 vs. CD14-CD19 protein distributions in the form of contour plots. We randomly sampled 50,000 cells in the non-differential regions and plotted their densities in black contours. The monofunctional, bifunctional, and polyfunctional enriched-cell sets are defined above. The densities of the enriched-set cell expressions are plotted in red contours.  These plots show that CD3, a T cell co-receptor (TCR), is down-regulated as the cells become more activated.
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 8, fig.asp = 0.33}
+
+names(example_eqapol_data$CMV)[7:17] <- c("CD57","CD4","CD14-CD19","CD3",
+                        "CD27","TNFa",
+                        "CD8","IL-2","CD45RO",
+                        "CD107","IFNg")
+
+
+cohort2_all_markers_df <- example_eqapol_data$CMV %>%
+  dplyr::mutate(disc_comb_label = case_when(row_number()%in%intersect1~ 1,
+                                            row_number()%in%intersect2~ 2,
+                                            row_number()%in%intersect3~ 3,
+                                            row_number()%in%intersect4~ 4,
+                                            row_number()%in%intersect5~ 5,
+                                            row_number()%in%intersect6 ~6,
+                                            TRUE ~ 0),
+                disc_comb_label_grp2 = case_when((disc_comb_label%in%c(3,4))~1,
+                                                 (disc_comb_label==5)~2,
+                                                 (disc_comb_label==6)~3)
+  ) %>%
+  dplyr::arrange(disc_comb_label) #Sort by number of experiments
+
+#Activated cells
+cohort2_all_markers_df_act <- cohort2_all_markers_df %>%
+  subset(!is.na(disc_comb_label_grp2))
+
+#Non-activated cells
+#Add disc_comb_label_grp2 to match labeller values
+cohort2_all_markers_df_non_act1 <- cohort2_all_markers_df %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=1)
+
+cohort2_all_markers_df_non_act2 <- cohort2_all_markers_df %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=2)
+
+cohort2_all_markers_df_non_act3 <- cohort2_all_markers_df %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=3)
+
+cohort2_all_markers_df_non_act <- do.call("rbind",list(cohort2_all_markers_df_non_act1,
+                                                       cohort2_all_markers_df_non_act2,
+                                                       cohort2_all_markers_df_non_act3))
+
+
+cohort2_all_markers_df_sub_gt0 <- subset(cohort2_all_markers_df,disc_comb_label>0)
+
+#Sub-sample for faster plotting
+set.seed(1234)
+sample_case_indx <- sample(nrow(cohort2_all_markers_df),50000)
+
+cohort2_all_markers_df_sub0_12 <- cohort2_all_markers_df[sample_case_indx,] %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=1)
+
+cohort2_all_markers_df_sub0_22 <- cohort2_all_markers_df[sample_case_indx,] %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=2)
+
+cohort2_all_markers_df_sub0_32 <- cohort2_all_markers_df[sample_case_indx,] %>%
+  dplyr::filter(disc_comb_label==0) %>%
+  dplyr::mutate(disc_comb_label_grp2=3)
+
+
+cohort2_all_markers_df_sub0_2 <- do.call("rbind",list(cohort2_all_markers_df_sub0_12,
+                                            cohort2_all_markers_df_sub0_22,
+                                            cohort2_all_markers_df_sub0_32))
+
+
+to_string <- as_labeller(c(`1` = "Monofunctional",
+                           `2` = "Bifunctional",
+                           `3` = "Polyfunctional"))
+
+ggplot() +
+  facet_grid(~disc_comb_label_grp2,space = "free",labeller = to_string,drop=TRUE)+
+  stat_density_2d(data = cohort2_all_markers_df_sub_gt0[!is.na(cohort2_all_markers_df_sub_gt0$disc_comb_label_grp2),],
+                  geom = "polygon", contour = TRUE,
+                  aes(x=`CD14-CD19`,y=CD3,fill = after_stat(level)),
+                  bins = 10) +
+  scale_fill_distiller(palette = "Reds", direction = 1) +
+  geom_density_2d(data=cohort2_all_markers_df_sub0_2,
+                  aes(x=`CD14-CD19`,y=CD3,alpha=..level..),
+                  color="black",
+                  bins = 50) +
+  scale_alpha(name="Non-enriched Set \nCell Density") +
+  labs(fill="Enriched Set \nCell Density") +
+  theme_light() +
+  guides(alpha = guide_legend(order = 1)) +
+  theme(strip.placement = "outside",
+        strip.text = element_text(size = 14,colour = "black"),
+        axis.title.x = element_text(size=14),
+        axis.title.y = element_text(size=14))
+```
 
 
 <!--   &nbsp; -->
