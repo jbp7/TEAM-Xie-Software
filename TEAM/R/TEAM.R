@@ -450,7 +450,7 @@ valid.counts = function(x,c.prev){
 }
 
 #' create.boxes2D
-#' @param bin_info partition
+#' @param partition_info partition
 #' @param lim default limit
 #' @param xll user-specified lower x limit
 #' @param xul user-specified upper x limit
@@ -459,9 +459,9 @@ valid.counts = function(x,c.prev){
 #' @return A \code{\link{matrix}} containing the rectangular coordinates of
 #' each box
 #' @export create.boxes2D
-create.boxes2D <- function(bin_info,lim,xll,xul,yll,yul){
+create.boxes2D <- function(partition_info,lim,xll,xul,yll,yul){
 
-  bin.df <- bin_info$bin.df
+  bin.df <- partition_info$bin.df
 
   lower.x =  as.numeric(sub(".]*", "", sub(",.*", "", bin.df$x.bd)))
   upper.x = as.numeric(sub("].*", "", sub(".*,", "", bin.df$x.bd)))
