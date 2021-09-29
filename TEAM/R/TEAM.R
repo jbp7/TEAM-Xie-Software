@@ -2,7 +2,9 @@
 #' @description This function performs multiple testing embedded in an
 #' aggregation tree structure in order to identify local differences between two
 #' probability density functions
-#' @importFrom stats data.table ggplot2 dplyr
+#' @importFrom ks norm.mixt
+#' @importFrom dplyr between
+#' @import data.table
 #' @param partition_info Partition for first layer of aggregation tree
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
@@ -122,7 +124,9 @@ TEAM = function(partition_info,alpha,L){
 #' corresponding to the non-reference sample (want to find regions enriched
 #' for these observations)
 #' @param m A positive integer specifying the number of bins in layer 1
-#' @import dplyr ggplot2
+#' @importFrom dplyr arrange
+#' @importFrom stats aggregate quantile
+#' @importFrom ggplot2 cut_number
 #' @return A \code{\link{list}} containing the the pooled observation
 #' \code{\link{data.frame}} (dat),
 #' a \code{\link{data.frame}} containing the segments/rectangles that define
@@ -202,7 +206,7 @@ create_partition_info <- function(df1,df2,m){
                         n = n,
                         x = x
       ) %>%
-        dplyr::arrange(indx)
+        arrange(indx)
     } else{
       y.bds <- NULL
       for(i in seq(length(breaks$y)-1)){
@@ -225,7 +229,7 @@ create_partition_info <- function(df1,df2,m){
                         n = n,
                         x = x
       ) %>%
-        dplyr::arrange(indx)
+        arrange(indx)
     }
 
   }
@@ -242,7 +246,8 @@ create_partition_info <- function(df1,df2,m){
 }
 
 #' create.xy.breaks
-#' @import stats dplyr
+#' @importFrom stats quantile aggregate
+#' @importFrom dplyr between
 #' @param dat input \code{\link{data.frame}} of observations
 #' @param m number of bins
 #' @param first.axis first axis to partition
