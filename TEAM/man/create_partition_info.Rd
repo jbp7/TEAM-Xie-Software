@@ -3,20 +3,34 @@
 \name{create_partition_info}
 \alias{create_partition_info}
 \title{create_partition_info
-Creates a partition of the 1D or 2D sample space of the pooled observations into mutually disjoint bins.
-The bins form the leaves or finest-level regions for layer 1 of the aggregation tree.}
+Creates a partition of the 1D or 2D sample space of the pooled observations
+into mutually disjoint bins.
+The bins form the leaves or finest-level regions for layer 1 of the
+aggregation tree.}
 \usage{
 create_partition_info(df1, df2, m)
 }
 \arguments{
-\item{df1}{A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the reference sample}
+\item{df1}{A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
+corresponding to the reference sample}
 
-\item{df2}{A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the non-reference sample (want to find regions enriched for these observations)}
+\item{df2}{A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
+corresponding to the non-reference sample (want to find regions enriched
+for these observations)}
 
 \item{m}{A positive integer specifying the number of bins in layer 1}
 }
+\value{
+A \code{\link{list}} containing the the pooled observation
+\code{\link{data.frame}} (dat),
+a \code{\link{data.frame}} containing the segments/rectangles that define
+each bin and their layer 1 indices (bin.df),
+the breaks along each dimension for the bins
+}
 \description{
 create_partition_info
-Creates a partition of the 1D or 2D sample space of the pooled observations into mutually disjoint bins.
-The bins form the leaves or finest-level regions for layer 1 of the aggregation tree.
+Creates a partition of the 1D or 2D sample space of the pooled observations
+into mutually disjoint bins.
+The bins form the leaves or finest-level regions for layer 1 of the
+aggregation tree.
 }

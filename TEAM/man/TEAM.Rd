@@ -14,17 +14,22 @@ TEAM(partition_info, alpha, L)
 \item{L}{Number of layers in the aggregation tree}
 }
 \value{
-A \code{\link{list}} containing the number of pooled observations in each bin (n), the number of bins/leaves at each layer (m.l), the discoveries (S.list) in each layer and the estimated layer-specific thresholds (c.hats)
+A \code{\link{list}} containing the number of pooled observations in
+each bin (n), the number of bins/leaves at each layer (m.l), the discoveries
+(S.list) in each layer and the estimated layer-specific thresholds (c.hats)
 }
 \description{
-This function performs multiple testing embedded in an aggregation tree structure in order to identify local differences between two probability density functions
+This function performs multiple testing embedded in an
+aggregation tree structure in order to identify local differences between two
+probability density functions
 }
 \examples{
-## Example with 1D pdfs: find where case density is higher than control density
+## Example with 1D pdfs: find where case density is higher than control
+density
 set.seed(1)
 # Simulate local shift difference for each sample from mixture of normals
+# Uses rnorm.mixt from ks library
 N1 <- N2 <- 1e6
-require(ks) #loads rnorm.mixt function
 #Controls
 x1 <- rnorm.mixt(N1,mus=c(0.2,0.89),sigmas=c(0.04,0.01),props=c(0.97,0.03))
 #Cases
@@ -43,5 +48,7 @@ res <- TEAM(partition_info=partition1D,alpha=0.05,L=3)
 #partition1D$bin.df$x.bd[res$S.list[[3]]]
 }
 \references{
-Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis \url{https://arxiv.org/abs/1906.07757}
+Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm
+on the Aggregation Tree for Flow Cytometry Analysis
+\url{https://arxiv.org/abs/1906.07757}
 }

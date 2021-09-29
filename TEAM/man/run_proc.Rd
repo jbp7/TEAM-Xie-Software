@@ -6,6 +6,19 @@
 \usage{
 run_proc(l, n, partition_info_l, theta0, c_hat_prev, alpha)
 }
+\arguments{
+\item{l}{current layer}
+
+\item{n}{bin size}
+
+\item{partition_info_l}{updated partition information at current layer}
+
+\item{theta0}{proportion of cohort 2 to total}
+
+\item{c_hat_prev}{count that controls FDR at previous layer l-1}
+
+\item{alpha}{nominal FDR level}
+}
 \description{
 run_proc
 }

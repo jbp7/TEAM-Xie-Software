@@ -6,6 +6,11 @@
 \usage{
 valid.counts(x, c.prev)
 }
+\arguments{
+\item{x}{count}
+
+\item{c.prev}{count that controls FDR at previous layer l-1}
+}
 \description{
 valid.counts
 }

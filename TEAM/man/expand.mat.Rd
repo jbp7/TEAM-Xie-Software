@@ -6,6 +6,11 @@
 \usage{
 expand.mat(mat, vec)
 }
+\arguments{
+\item{mat}{matrix of counts}
+
+\item{vec}{vector of counts}
+}
 \description{
 expand.mat
 }

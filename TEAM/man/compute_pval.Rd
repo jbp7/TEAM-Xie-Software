@@ -6,6 +6,19 @@
 \usage{
 compute_pval(l, xs, theta0, n_l, a_l, c_prev)
 }
+\arguments{
+\item{l}{current layer}
+
+\item{xs}{vector of counts}
+
+\item{theta0}{proportion of cohort 2 to total}
+
+\item{n_l}{bin size at current layer}
+
+\item{a_l}{max rejection count at current layer}
+
+\item{c_prev}{count that controls FDR at previous layer l-1}
+}
 \description{
 compute_pval
 }

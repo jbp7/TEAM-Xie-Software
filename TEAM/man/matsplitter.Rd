@@ -6,6 +6,13 @@
 \usage{
 matsplitter(M, r, c)
 }
+\arguments{
+\item{M}{matrix}
+
+\item{r}{number of rows to split}
+
+\item{c}{number of columns to split}
+}
 \description{
 matsplitter
 }

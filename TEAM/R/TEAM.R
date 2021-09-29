@@ -1,17 +1,24 @@
 #' @title Testing on an Aggregation Tree Method
-#' @description This function performs multiple testing embedded in an aggregation tree structure in order to identify local differences between two probability density functions
-#' @importFrom stats ks data.table ggplot2 plyr dplyr
+#' @description This function performs multiple testing embedded in an
+#' aggregation tree structure in order to identify local differences between two
+#' probability density functions
+#' @importFrom stats data.table ggplot2 dplyr
 #' @param partition_info Partition for first layer of aggregation tree
 #' @param alpha Target false discovery rate (FDR) level
 #' @param L Number of layers in the aggregation tree
-#' @return A \code{\link{list}} containing the number of pooled observations in each bin (n), the number of bins/leaves at each layer (m.l), the discoveries (S.list) in each layer and the estimated layer-specific thresholds (c.hats)
-#' @references Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis \url{https://arxiv.org/abs/1906.07757}
+#' @return A \code{\link{list}} containing the number of pooled observations in
+#' each bin (n), the number of bins/leaves at each layer (m.l), the discoveries
+#' (S.list) in each layer and the estimated layer-specific thresholds (c.hats)
+#' @references Pura J, Li X, Chan C, Xie J. TEAM: A Multiple Testing Algorithm
+#' on the Aggregation Tree for Flow Cytometry Analysis
+#' \url{https://arxiv.org/abs/1906.07757}
 #' @examples
-#' ## Example with 1D pdfs: find where case density is higher than control density
+#' ## Example with 1D pdfs: find where case density is higher than control
+#' density
 #' set.seed(1)
 #' # Simulate local shift difference for each sample from mixture of normals
+#' # Uses rnorm.mixt from ks library
 #' N1 <- N2 <- 1e6
-#' require(ks) #loads rnorm.mixt function
 #' #Controls
 #' x1 <- rnorm.mixt(N1,mus=c(0.2,0.89),sigmas=c(0.04,0.01),props=c(0.97,0.03))
 #' #Cases
@@ -105,14 +112,21 @@ TEAM = function(partition_info,alpha,L){
 ##### Helper Functions #####
 
 #' create_partition_info
-#' Creates a partition of the 1D or 2D sample space of the pooled observations into mutually disjoint bins.
-#' The bins form the leaves or finest-level regions for layer 1 of the aggregation tree.
-#' @param df1 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the reference sample
-#' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y") corresponding to the non-reference sample (want to find regions enriched for these observations)
+#' Creates a partition of the 1D or 2D sample space of the pooled observations
+#' into mutually disjoint bins.
+#' The bins form the leaves or finest-level regions for layer 1 of the
+#' aggregation tree.
+#' @param df1 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
+#' corresponding to the reference sample
+#' @param df2 A \code{\link{data.frame}} with 1 or 2 columns ("X","Y")
+#' corresponding to the non-reference sample (want to find regions enriched
+#' for these observations)
 #' @param m A positive integer specifying the number of bins in layer 1
 #' @import dplyr ggplot2
-#' @return A \code{\link{list}} containing the the pooled observation \code{\link{data.frame}} (dat),
-#' a \code{\link{data.frame}} containing the segments/rectangles that define each bin and their layer 1 indices (bin.df),
+#' @return A \code{\link{list}} containing the the pooled observation
+#' \code{\link{data.frame}} (dat),
+#' a \code{\link{data.frame}} containing the segments/rectangles that define
+#' each bin and their layer 1 indices (bin.df),
 #' the breaks along each dimension for the bins
 #' @export create_partition_info
 create_partition_info <- function(df1,df2,m){
@@ -157,7 +171,8 @@ create_partition_info <- function(df1,df2,m){
     mat.indx <- matrix(NA,nrow=length(b),ncol=length(a))
     tmp.b <- b
     for(d in seq_along(a)){
-      mat.indx[,length(a)-d+1] <- bitwShiftR(abs(bitwOr(1L,bitwShiftL(a[[d]]+tmp.b-1L,1L))%%bitwShiftL(a[[d]],2L)-
+      mat.indx[,length(a)-d+1] <-
+        bitwShiftR(abs(bitwOr(1L,bitwShiftL(a[[d]]+tmp.b-1L,1L))%%bitwShiftL(a[[d]],2L)-
                                                    bitwShiftL(a[[d]],1L)),1L)+1L
       tmp.b <- ((tmp.b-1L) %/% a[[d]])+1L
     }
@@ -274,7 +289,7 @@ matsplitter<-function(M, r, c) {
 }
 
 #' run_proc
-#' @importFrom stats
+#' @import stats
 #' @param l current layer
 #' @param n bin size
 #' @param partition_info_l updated partition information at current layer
@@ -296,7 +311,8 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 
   a_l =  1/(m_l*log(m_l))
 
-  #min_c = qbinom(alpha,n.l,theta0,lower.tail=FALSE) #Indices that are immediately ignored - add this to calculate
+  #min_c = qbinom(alpha,n.l,theta0,lower.tail=FALSE)
+  #Indices that are immediately ignored - add this to calculate
   x_l_valid = sort(unique(x_l[x_l>n_l*theta0]),decreasing = TRUE)
 
   #Compute p-values only for unique values of valid x's
@@ -329,7 +345,7 @@ run_proc <- function(l,n,partition_info_l,theta0,c_hat_prev,alpha){
 }
 
 #' compute_pval
-#' @importFrom stats
+#' @import stats
 #' @param l current layer
 #' @param xs vector of counts
 #' @param theta0 proportion of cohort 2 to total
