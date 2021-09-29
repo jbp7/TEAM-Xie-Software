@@ -17,7 +17,7 @@ for these observations)}
 \item{m}{A positive integer specifying the number of bins in layer 1}
 }
 \value{
-A \code{\link{list}} containing the the pooled observation
+A \code{\link{list}} containing the pooled observation
 \code{\link{data.frame}} (dat),
 a \code{\link{data.frame}} containing the segments/rectangles that define
 each bin and their layer 1 indices (bin.df),

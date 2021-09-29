@@ -126,7 +126,7 @@ TEAM = function(partition_info,alpha,L){
 #' @importFrom dplyr arrange %>%
 #' @importFrom stats aggregate quantile var
 #' @importFrom ggplot2 cut_number
-#' @return A \code{\link{list}} containing the the pooled observation
+#' @return A \code{\link{list}} containing the pooled observation
 #' \code{\link{data.frame}} (dat),
 #' a \code{\link{data.frame}} containing the segments/rectangles that define
 #' each bin and their layer 1 indices (bin.df),
@@ -446,6 +446,69 @@ valid.counts = function(x,c.prev){
     return(lapply(idx, function(i, x) x[i, ], mat))
   }
 }
+
+#' create.boxes2D
+#' @param bin_info partition
+#' @param lim default limit
+#' @param xll user-specified lower x limit
+#' @param xul user-specified upper x limit
+#' @param yll user-specified lower y limit
+#' @param yul user-specified upper y limit
+#' @return A \code{\link{matrix}} containing the rectangular coordinates of
+#' each box
+#' @export create.boxes2D
+create.boxes2D <- function(bin_info,lim,xll,xul,yll,yul){
+
+  bin.df <- bin_info$bin.df
+
+  lower.x =  as.numeric(sub(".]*", "", sub(",.*", "", bin.df$x.bd)))
+  upper.x = as.numeric(sub("].*", "", sub(".*,", "", bin.df$x.bd)))
+  lower.y =  as.numeric(sub(".]*", "", sub(",.*", "", bin.df$y.bd)))
+  upper.y = as.numeric(sub("].*", "", sub(".*,", "", bin.df$y.bd)))
+
+  m = bin_info$m
+
+  if(bin_info$first.axis==1){ #Partition along x-axis first
+
+    which.lower.x <- seq(m)
+    which.upper.x <- tail(seq(m^2),m)
+    which.lower.y <- c(m*seq(2,m,2),m*seq(0,m-1,2)+1)
+    which.upper.y <- c(m*seq(1,m,2),m*seq(1,m-1,2)+1)
+
+  } else{
+
+    which.lower.x <- c(m*seq(2,m,2),m*seq(0,m-1,2)+1)
+    which.upper.x <- c(m*seq(1,m,2),m*seq(1,m-1,2)+1)
+    which.lower.y <- seq(m)
+    which.upper.y <- tail(seq(m^2),m)
+
+  }
+
+  if(missing(lim) & (missing(xll)&missing(xul)&missing(yll)&missing(yul))){
+    stop("Need to specify limits for boxes!")
+  }
+  if(missing(lim) & any(missing(xll),missing(xul),missing(yll),missing(yul))){
+    stop("Need to specify limits for boxes!")
+  }
+  if(missing(xll)&missing(xul)&missing(yll)&missing(yul)){
+    lower.x[which.lower.x] = -lim
+    upper.x[which.upper.x] = lim
+    lower.y[which.lower.y] = -lim
+    upper.y[which.upper.y] = lim
+  }
+  if(missing(lim)){
+    lower.x[which.lower.x] = xll
+    upper.x[which.upper.x] = xul
+    lower.y[which.lower.y] = yll
+    upper.y[which.upper.y] = yul
+  }
+
+
+  out <- cbind(lower.x,lower.y,upper.x,upper.y)
+
+  out
+}
+
 
 #' Resolve NOTEs during package building
 #' @import utils

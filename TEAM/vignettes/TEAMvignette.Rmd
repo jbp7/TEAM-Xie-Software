@@ -1,6 +1,6 @@
 ---
 title: "Identifying Differential Density Regions with TEAM"
-author: "John Pura"
+#author: "John Pura"
 data: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
@@ -14,14 +14,9 @@ vignette: >
 
   
 ```{r setup, include = FALSE}
-#library(dplyr)
-#library(ggplot2)
-#library(GGally)
-#library(ComplexHeatmap)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
-  
 )
 ```
 &nbsp;
@@ -34,15 +29,15 @@ TEAM is a multiple-testing method that embeds hypothesis testing on an aggregati
   
  </p>
 
-We begin by loading the package
+We first load the package:
 
 ```{r, results='hide',message=FALSE,warning=FALSE}
 library(TEAM)
 ```
 
-Below we demonstrate two examples of using TEAM on an example dataset. The data can be downloaded directly from Gitlab and loaded by calling:
+Below we demonstrate two examples of using TEAM on an example dataset. The data can be downloaded directly from GitLab and loaded by calling:
 
-```{r, eval=FALSE}
+```{r, message=FALSE}
 URL <- "https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/raw/main/TEAM/data/example_eqapol_data.rda"
 download.file(URL,"example_eqapol_data.rda", method="curl")
 load("example_eqapol_data.rda")
@@ -51,7 +46,7 @@ load("example_eqapol_data.rda")
 # Example Dataset
 
 <p align="justify">
-The accompanying dataset `example_equapol_data` is a sample from the External Quality Assurance Program Oversight Laboratory proficiency program by the Duke Immune Profiling Core. The dataset contains the results of a flow-cytometry experiment conducted on a blood sample from a single healthy individual. The blood sample was split into two parts: one was used as a negative control (cohort 1) and the other was stimulated with a peptide mixture from the immunodominant cytomegalovirus (CMV) pp65 protein (cohort 2). Results for each cohort are summarized as data frames labeled `Costim` for cohort 1 and `CMV` for cohort 2. Each data frame contains expression data on approximately 200 thousand cell observations (rows) and 11 protein markers (columns).
+The accompanying dataset `example_equapol_data` is a sample from the External Quality Assurance Program Oversight Laboratory proficiency program by the Duke Immune Profiling Core. The dataset contains the results of a flow-cytometry experiment conducted on a blood sample from a single healthy individual. The blood sample was split into two parts: one was used as a negative control (cohort 1) and the other was stimulated with a peptide mixture from the immunodominant cytomegalovirus (CMV) pp65 protein (cohort 2). Results for each cohort are summarized as data frames labeled `Costim` for cohort 1 and `CMV` for cohort 2. Each data frame contains expression data on approximately 200 thousand cell observations (rows) and 6 protein markers (columns).
  </p>
 
 # Analysis 1: Identifying differential density regions
@@ -60,12 +55,16 @@ The accompanying dataset `example_equapol_data` is a sample from the External Qu
  </p>
   
 ```{r echo=FALSE,message=FALSE,warning=FALSE,fig.width = 7, fig.asp = .62}
+library(dplyr)
+library(ggplot2)
+library(GGally)
+
 
 func_channel_names = c("TNFa A700","IL 2 PE","IFNg PE Cy7","CD107 PE Cy5")
 
-subj_costim <- eqapol_data_example$Costim %>%
+subj_costim <- example_eqapol_data$Costim %>%
                mutate(case_ind = 0)
-subj_cmv <- eqapol_data_example$CMV %>%
+subj_cmv <- example_eqapol_data$CMV %>%
             mutate(case_ind = 1)
 
 subj_eqapol <- rbind(subj_costim,subj_cmv) %>% 
@@ -125,124 +124,124 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 ``` 
 
 
-<!-- ## Creating a partition -->
+## Creating a partition
 
-<!-- <p align="justify"> -->
+<p align="justify">
 
-<!-- Suppose we are interested in comparing the 2D probability density defined by TNF-$\alpha$ and IFN-$\gamma$. TEAM requires the user to specify a partition on the 2D sample space defined over these markers. Here we specify a sequential partition, which is achieved by the following steps: -->
-<!-- \begin{enumerate} -->
-<!-- \item Pool the cohort 1 and cohort 2 observations. -->
-<!-- \item Sort dimensions (markers) from largest to smallest expression variance. -->
-<!-- \item Taking the first dimension (highest variance), partition into $m$ bins at the $1/m,\dots,(m-1)/m$ sample quantiles -->
-<!-- \item Within each of the resulting bins from the second step, partition the pooled observations along the second dimension (marker) into $m$ bins at the $1/m,\dots,(m-1)/m$ sample quantiles -->
-<!-- \end{enumerate} -->
-<!-- TEAM can accommodate other user-defined partitions for univariate and bivariate analyses, as long as the partitions result in bins with approximately the same number of samples. </p> -->
+Suppose we are interested in comparing the 2D probability density defined by TNF-$\alpha$ and IFN-$\gamma$. TEAM requires the user to specify a partition on the 2D sample space defined over these markers. Here we specify a sequential partition, which is achieved by the following steps:
+\begin{enumerate}
+\item Pool the cohort 1 and cohort 2 observations.
+\item Sort dimensions (markers) from largest to smallest expression variance.
+\item Taking the first dimension (highest variance), partition into $m$ bins at the $1/m,\dots,(m-1)/m$ sample quantiles
+\item Within each of the resulting bins from the second step, partition the pooled observations along the second dimension (marker) into $m$ bins at the $1/m,\dots,(m-1)/m$ sample quantiles
+\end{enumerate}
+TEAM can accommodate other user-defined partitions for univariate and bivariate analyses, as long as the partitions result in bins with approximately the same number of samples. </p>
 
-<!-- ```{r,message=FALSE,warning=FALSE} -->
+```{r,message=FALSE,warning=FALSE}
 
-<!-- #Cohort 1 -->
-<!-- x1 = eqapol_data_example$Costim$`TNFa A700` -->
-<!-- y1 = eqapol_data_example$Costim$`IFNg PE Cy7` -->
+#Cohort 1
+x1 = example_eqapol_data$Costim$`TNFa A700`
+y1 = example_eqapol_data$Costim$`IFNg PE Cy7`
 
-<!-- #Cohort 2 -->
-<!-- x2 = eqapol_data_example$CMV$`TNFa A700` -->
-<!-- y2 = eqapol_data_example$CMV$`IFNg PE Cy7` -->
+#Cohort 2
+x2 = example_eqapol_data$CMV$`TNFa A700`
+y2 = example_eqapol_data$CMV$`IFNg PE Cy7`
 
-<!-- N1 = length(x1) -->
-<!-- N2 = length(x2) -->
+N1 = length(x1)
+N2 = length(x2)
 
-<!-- cohort1_df <- data.frame(X=x1,Y=y1) -->
-<!-- cohort2_df <- data.frame(X=x2,Y=y2) -->
+cohort1_df <- data.frame(X=x1,Y=y1)
+cohort2_df <- data.frame(X=x2,Y=y2)
 
-<!-- #Choose number of bins based on theoretically sound value -->
-<!-- m = round(((N1+N2)^2/2)^(1/6)) -->
+#Choose number of bins based on theoretically sound value
+m = round(((N1+N2)^2/2)^(1/6))
 
-<!-- partition2D <- create_partition_info(df1=cohort1_df, -->
-<!--                                      df2=cohort2_df, -->
-<!--                                      m=m) -->
+partition2D <- create_partition_info(df1=cohort1_df,
+                                     df2=cohort2_df,
+                                     m=m)
 
-<!-- names(partition2D) -->
+names(partition2D)
 
-<!-- ``` -->
+```
 
-<!-- <p align="justify"> -->
-<!-- The object `partition2D` is a list that contains `bin.df`, which contains bin-specific information, including the boundaries, the number of pooled cells, and the number of cohort 2 (stimulated) cells in each bin. -->
-<!-- </p> -->
+<p align="justify">
+The object `partition2D` is a list that contains `bin.df`, which contains bin-specific information, including the boundaries, the number of pooled cells, and the number of cohort 2 (stimulated) cells in each bin.
+</p>
 
 
-<!-- ## Run TEAM -->
+## Run TEAM
 
-<!-- ```{r,message=FALSE,warning=FALSE} -->
-<!-- res <- TEAM(partition_info=partition2D, -->
-<!--             L=3, -->
-<!--             alpha=0.05) -->
+```{r,message=FALSE,warning=FALSE}
+res <- TEAM(partition_info=partition2D,
+            L=3,
+            alpha=0.05)
 
-<!-- res$S.list -->
-<!-- ``` -->
+res$S.list
+```
 
-<!-- <p align="justify"> -->
-<!-- The object `res` is a list that contains details on the multiple-testing procedure along each layer of the aggregation tree. The indices of the bins that were identified in each layer are provided in the output. The `bin.df` data frame in `partition2D` can be used to visualize the differential density regions, as well as visualize the characteristics of the individual cells contained within those regions. -->
-<!-- </p> -->
+<p align="justify">
+The object `res` is a list that contains details on the multiple-testing procedure along each layer of the aggregation tree. The indices of the bins that were identified in each layer are provided in the list object `res$S.list`. The `bin.df` data frame in `partition2D` can be used to visualize the differential density regions, as well as visualize the characteristics of the individual cells contained within those regions.
+</p>
 
-<!-- ## Visualize results -->
+## Visualize results
 
-<!-- <p align="justify"> -->
+<p align="justify">
 
-<!-- The rejected bins (shaded rectangles) can be visualized with the original data. TEAM is able to identify the region enriched for cohort 2 cells in the top-right. It is expected that TEAM will also identify potentially spurious regions, but on average these are controlled at 5\% out of all rejected regions. -->
+The rejected bins (shaded rectangles) can be visualized with the original data. TEAM is able to identify the region enriched for cohort 2 cells in the top-right. It is expected that TEAM will also identify potentially spurious regions, but on average these are controlled at 5\% out of all rejected regions.
 
-<!-- </p> -->
+</p>
 
-<!-- ```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 7, fig.asp = .62} -->
+```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 7, fig.asp = .62}
 
-<!-- input_dat <- rbind(cohort1_df, -->
-<!--                    cohort2_df) -->
-<!-- input_dat$stim_ind <- rep(c(0,1),times=c(N1,N2)) -->
+input_dat <- rbind(cohort1_df,
+                   cohort2_df)
+input_dat$stim_ind <- rep(c(0,1),times=c(N1,N2))
 
-<!-- rect_bins <- data.frame(create.boxes2D(partition2D, -->
-<!--                        xll = min(input_dat$X), -->
-<!--                        xul = max(input_dat$X), -->
-<!--                        yll = min(input_dat$Y), -->
-<!--                        yul = max(input_dat$Y) -->
-<!--                        )) -->
+rect_bins <- data.frame(create.boxes2D(partition2D,
+                       xll = min(input_dat$X),
+                       xul = max(input_dat$X),
+                       yll = min(input_dat$Y),
+                       yul = max(input_dat$Y)
+                       ))
 
-<!-- rect_bins_TEAM <- rect_bins[res$S.list[[3]],] -->
+rect_bins_TEAM <- rect_bins[res$S.list[[3]],]
 
-<!-- ggplot(subj_eqapol, -->
-<!--        aes(x=X,y=Y)) + -->
-<!--     stat_density_2d(data = subset(input_dat,stim_ind==1), -->
-<!--                     geom = "polygon", contour = TRUE, -->
-<!--                     aes(x=X,y=Y, -->
-<!--                         fill = after_stat(level)), -->
-<!--                     bins = 50) + -->
-<!--     scale_fill_distiller(palette = "Reds", direction = 1) + -->
-<!--     geom_density_2d(data=subset(input_dat,stim_ind==0), -->
-<!--                     aes(x=X, -->
-<!--                           y=Y, -->
-<!--                         alpha=..level..), -->
-<!--                     color="black", -->
-<!--                     bins = 50) + -->
-<!--     geom_rect(mapping=aes(xmin=lower.x,xmax=upper.x,ymin=lower.y,ymax=upper.y), -->
-<!--               data = rect_bins_TEAM, -->
-<!--               fill="blue", -->
-<!--               color=NA, alpha=0.05,inherit.aes = FALSE) + -->
-<!--     scale_alpha(name="Control \nCell Density") + -->
-<!--     labs(fill="Stimulated \nCell Density", -->
-<!--          x=expression(paste("TNF-",alpha)),y=expression(paste("IFN-",gamma))) + -->
-<!--     theme_light() -->
-<!-- ``` -->
+ggplot(subj_eqapol,
+       aes(x=X,y=Y)) +
+    stat_density_2d(data = subset(input_dat,stim_ind==1),
+                    geom = "polygon", contour = TRUE,
+                    aes(x=X,y=Y,
+                        fill = after_stat(level)),
+                    bins = 50) +
+    scale_fill_distiller(palette = "Reds", direction = 1) +
+    geom_density_2d(data=subset(input_dat,stim_ind==0),
+                    aes(x=X,
+                          y=Y,
+                        alpha=..level..),
+                    color="black",
+                    bins = 50) +
+    geom_rect(mapping=aes(xmin=lower.x,xmax=upper.x,ymin=lower.y,ymax=upper.y),
+              data = rect_bins_TEAM,
+              fill="blue",
+              color=NA, alpha=0.05,inherit.aes = FALSE) +
+    scale_alpha(name="Control \nCell Density") +
+    labs(fill="Stimulated \nCell Density",
+         x=expression(paste("TNF-",alpha)),y=expression(paste("IFN-",gamma))) +
+    theme_light()
+```
 
 <!-- # Analysis 2: Identifying enriched sets of functional cells -->
 
 <!-- <p align="justify"> -->
 
-<!-- TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional. 
-  -->
+<!-- =TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional. -->
+
 
 <!-- In this example, we look at the subspaces defined by pairwise combinations of four functional markers from above: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. We apply TEAM to each of the six bivariate subspaces spanned by these markers. Monofunctional enriched cell sets (activated in one marker) are expected to belong to three or four of these subspaces. Bifunctional enriched cell sets (activated in two markers) are expected to belong to five out of the six subspaces. Finally, polyfunctional enriched cell sets (activated in at least three markers) are expected to belong to all six subspaces. -->
 
 <!-- </p> -->
 
-<!-- ## Setup the subanalyses  -->
+<!-- ## Setup the subanalyses -->
 <!-- <p align="justify"> -->
 
 <!-- First we generate all the bivariate combinations of the four markers that will be used to specify the subanalyses. -->
@@ -258,7 +257,7 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 
 <!-- <p align="justify"> -->
 
-<!-- Next, we run TEAM on each bivariate subspace to identify differential density regions, i.e. regions where the the CMV-stimulated cell (cohort 2) density is overexpressed compared to the control cell (cohort 1) density. The main object is `cell_list_TEAM`, which is a list of the cells in the differential density regions that were identified in each of the six subanalyses. TEAM is run to 3 layers with a target FDR of 0.05.  -->
+<!-- Next, we run TEAM on each bivariate subspace to identify differential density regions, i.e. regions where the the CMV-stimulated cell (cohort 2) density is overexpressed compared to the control cell (cohort 1) density. The main object is `cell_list_TEAM`, which is a list of the cells in the differential density regions that were identified in each of the six subanalyses. TEAM is run to 3 layers with a target FDR of 0.05. -->
 
 <!-- </p> -->
 
@@ -270,10 +269,10 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 <!-- for (j in seq(ncol(func_comb))){ -->
 
 <!--   #print(func_channel_names[j]) -->
-<!--   x1 = eqapol_data_example$Costim[[func_comb[1,j]]] -->
-<!--   y1 = eqapol_data_example$Costim[[func_comb[2,j]]] -->
-<!--   x2 = eqapol_data_example$CMV[[func_comb[1,j]]] -->
-<!--   y2 = eqapol_data_example$CMV[[func_comb[2,j]]] -->
+<!--   x1 = example_eqapol_data$Costim[[func_comb[1,j]]] -->
+<!--   y1 = example_eqapol_data$Costim[[func_comb[2,j]]] -->
+<!--   x2 = example_eqapol_data$CMV[[func_comb[1,j]]] -->
+<!--   y2 = example_eqapol_data$CMV[[func_comb[2,j]]] -->
 
 <!--   N1 = length(x1) -->
 <!--   N2 = length(x2) -->
@@ -296,7 +295,7 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 <!--               alpha=0.05) -->
 
 
-<!--   #Label each cell based on the bin ID  -->
+<!--   #Label each cell based on the bin ID -->
 <!--   #This may be a little slow -->
 <!--   df.all <- partition2D$dat -->
 <!--   box.mats <- create.boxes2D(partition_info = partition2D,lim=1e6) -->
@@ -304,7 +303,7 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 
 <!--   df.all$box.indx <- rep(NA,N1+N2) -->
 <!--   for(k in seq(nrow(box.mats))){ -->
-<!--     which.obs <- which((df.all$X>=box.mats[k,1] & df.all$X< box.mats[k,3]) &  -->
+<!--     which.obs <- which((df.all$X>=box.mats[k,1] & df.all$X< box.mats[k,3]) & -->
 <!--                          (df.all$Y>=box.mats[k,2] & df.all$Y< box.mats[k,4])) -->
 <!--     df.all$box.indx[which.obs] <- k -->
 <!--   } -->
@@ -326,11 +325,12 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 
 <!-- <p align="justify"> -->
 
-<!-- Several functions from the `ComplexHeatmap` package can be used to efficiently compute intersections of individual cells within rejected regions across the six subanalyses. We can then phenotype enriched cell sets accordingly, based on cell intersections between the six subanalyses.  -->
+<!-- Several functions from the `ComplexHeatmap` package can be used to efficiently compute intersections of individual cells within rejected regions across the six subanalyses. We can then phenotype enriched cell sets accordingly, based on cell intersections between the six subanalyses. -->
 
 <!-- </p> -->
 
 <!-- ```{r postproc,message=FALSE,warning=FALSE} -->
+<!-- library(ComplexHeatmap) -->
 
 <!-- func_comb_names <- apply(func_comb,2,function(x) paste(x[1],"+",x[2])) -->
 
@@ -366,17 +366,17 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 
 <!-- ## Visualize results -->
 
-<!-- We plotted the T cell CD3 vs. CD14-CD19 protein distributions in the form of contour plots. We randomly sampled 50,000 cells in the non-differential regions and plotted their densities in black contours. The monofunctional, bifunctional, and polyfunctional enriched-cell sets are defined above. The densities of the enriched-set cell expressions are plotted in red contours.  These plots show that CD3, a T cell co-receptor (TCR), is down-regulated as the cells become more activated.  -->
+<!-- We plotted the T cell CD3 vs. CD14-CD19 protein distributions in the form of contour plots. We randomly sampled 50,000 cells in the non-differential regions and plotted their densities in black contours. The monofunctional, bifunctional, and polyfunctional enriched-cell sets are defined above. The densities of the enriched-set cell expressions are plotted in red contours.  These plots show that CD3, a T cell co-receptor (TCR), is down-regulated as the cells become more activated. -->
 
 <!-- ```{r,message=FALSE,warning=FALSE,echo=FALSE,fig.width = 8, fig.asp = 0.33} -->
 
-<!-- names(eqapol_data_example$CMV)[7:17] <- c("CD57","CD4","CD14-CD19","CD3", -->
+<!-- names(example_eqapol_data$CMV)[7:17] <- c("CD57","CD4","CD14-CD19","CD3", -->
 <!--                         "CD27","TNFa", -->
 <!--                         "CD8","IL-2","CD45RO", -->
 <!--                         "CD107","IFNg") -->
 
 
-<!-- cohort2_all_markers_df <- eqapol_data_example$CMV %>% -->
+<!-- cohort2_all_markers_df <- example_eqapol_data$CMV %>% -->
 <!--   dplyr::mutate(disc_comb_label = case_when(row_number()%in%intersect1~ 1, -->
 <!--                                             row_number()%in%intersect2~ 2, -->
 <!--                                             row_number()%in%intersect3~ 3, -->
@@ -437,15 +437,15 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 <!--                                             cohort2_all_markers_df_sub0_32)) -->
 
 
-<!-- to_string <- as_labeller(c(`1` = "Monofunctional",  -->
-<!--                            `2` = "Bifunctional",  -->
+<!-- to_string <- as_labeller(c(`1` = "Monofunctional", -->
+<!--                            `2` = "Bifunctional", -->
 <!--                            `3` = "Polyfunctional")) -->
 
 <!-- ggplot() + -->
 <!--   facet_grid(~disc_comb_label_grp2,space = "free",labeller = to_string,drop=TRUE)+ -->
 <!--   stat_density_2d(data = cohort2_all_markers_df_sub_gt0[!is.na(cohort2_all_markers_df_sub_gt0$disc_comb_label_grp2),], -->
 <!--                   geom = "polygon", contour = TRUE, -->
-<!--                   aes(x=`CD14-CD19`,y=CD3,fill = after_stat(level)),  -->
+<!--                   aes(x=`CD14-CD19`,y=CD3,fill = after_stat(level)), -->
 <!--                   bins = 10) + -->
 <!--   scale_fill_distiller(palette = "Reds", direction = 1) + -->
 <!--   geom_density_2d(data=cohort2_all_markers_df_sub0_2, -->
@@ -460,9 +460,8 @@ GGally::ggpairs(subj_eqapol, columns=1:4,
 <!--         strip.text = element_text(size = 14,colour = "black"), -->
 <!--         axis.title.x = element_text(size=14), -->
 <!--         axis.title.y = element_text(size=14)) -->
-
 <!-- ``` -->
 
 
-  &nbsp;
+<!--   &nbsp; -->
 
