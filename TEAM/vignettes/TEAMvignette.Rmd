@@ -237,7 +237,7 @@ ggplot(subj_eqapol,
 
 <p align="justify">
 
-=TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional.
+TEAM is designed to identify differential density regions. It cannot directly tell us which cells are activated. On the other hand, we can perform additional screening to narrow down the differential density regions to enrichment sets containing activated cells. The main idea is to utilize the subspaces spanned by key protein markers. Specifically, we create subspaces based on pairwise combinations of markers, apply TEAM to these combinations, and identify differential density regions for each combination. We can then take intersections over all identified regions to define three types of enriched cell sets: monofunctional, bifunctional, and polyfunctional.
 
 
 In this example, we look at the subspaces defined by pairwise combinations of four functional markers from above: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. We apply TEAM to each of the six bivariate subspaces spanned by these markers. Monofunctional enriched cell sets (activated in one marker) are expected to belong to three or four of these subspaces. Bifunctional enriched cell sets (activated in two markers) are expected to belong to five out of the six subspaces. Finally, polyfunctional enriched cell sets (activated in at least three markers) are expected to belong to all six subspaces.
@@ -459,7 +459,7 @@ ggplot() +
   theme_light() +
   guides(alpha = guide_legend(order = 1)) +
   theme(strip.placement = "outside",
-        strip.text = element_text(size = 14,colour = "black"),
+        strip.text = element_text(size = 11,colour = "black"),
         axis.title.x = element_text(size=14),
         axis.title.y = element_text(size=14))
 ```
