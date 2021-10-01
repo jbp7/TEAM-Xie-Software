@@ -55,6 +55,8 @@ The accompanying dataset `example_equapol_data` is a sample from the External Qu
 # Analysis 1: Identifying differential density regions
 
 <p align="justify"> To understand our dataset and analytical goal, we plot the estimated univariate and bivariate densities of the expressions for several key protein markers. Potential biological differences between control, cohort 1 (black) and CMV-stimulated cohort 2 (red) cell samples can be identified through examining bivariate densities of the four functional markers: TNF-$\alpha$, IL-2, IFN-$\gamma$, and CD107. Univariate densities are plotted along the diagonals, while bivariate densities are plotted in the lower triangular region. Cohort 1 functional marker densities are displayed as grey-scale contour lines, while cohort 2 marker densities are displayed as filled, red contours. The goal is to identify the locations where cohort 2 density is elevated compared to the cohort 1 density.
+
+The `GGally` package is used to plot an array of bivariate plots for each marker pair.
  </p>
   
 ```{r echo=FALSE,message=FALSE,warning=FALSE,fig.width = 7, fig.asp = .62}
