@@ -27,6 +27,7 @@ URL: https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team
 BugReports: https://gitlab.oit.duke.edu/jichunxie/xie-lab-software_team/-/issues
 Depends:
     R (>= 3.5.0)
+biocViews:
 Imports:
     stats,
     ggplot2,
