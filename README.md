@@ -27,9 +27,10 @@ remotes::install_gitlab(
   build_vignettes = TRUE,
   build_manual = TRUE)
 ```
+
 ## Documentation
 
-A detailed vignette containing examples of how to use TEAM can be viewed by calling:
+After installation, a detailed vignette containing examples of how to use TEAM can be viewed by calling:
 ```{r,eval=FALSE}
 browseVignettes("TEAM")
 ```
@@ -59,7 +60,10 @@ load("example_eqapol_data.rda")
 
 # Paper
 
-[Link to arxiv paper]
+`TEAM` accompanies the paper:
+   
+    Pura J., Li X., Chan C., Xie J. 2021. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis. \url{https://arxiv.org/abs/1906.07757}
+
 
 # Authors
 

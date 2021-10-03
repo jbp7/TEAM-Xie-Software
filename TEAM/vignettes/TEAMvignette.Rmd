@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 <p align="justify"> 
 
-TEAM is a multiple-testing method that embeds hypothesis testing on an aggregation tree to test hypotheses from fine- to coarse- resolution. One important application of TEAM is in identifying where two probability density functions differ. For example, in flow cytometry, one interest is in identifying stimulus-responsive cells based on their protein expression. Statistically, we translate this to comparing the protein expression probability density functions (PDFs) before and after the stimulus. Using TEAM, we can identify regions where the PDFs differ, and these differential regions can help researchers to further screen for those cells that are stimulus-responsive.
+TEAM is a multiple-testing method that embeds hypothesis testing on an aggregation tree to test hypotheses from fine- to coarse- resolution. One important application of TEAM is in identifying where two probability density functions differ. For example, in flow cytometry, one interest is in identifying stimulus-responsive cells based on their protein expression. Statistically, we translate this to comparing the protein expression probability density functions (PDFs) before and after the stimulus. Using TEAM, we can identify regions where the PDFs differ, and these differential regions can help researchers to further screen for those cells that are stimulus-responsive. A pre-print of our manuscript can be accessed at \url{https://arxiv.org/abs/1906.07757}.
   
  </p>
 
