@@ -62,7 +62,7 @@ load("example_eqapol_data.rda")
 
 `TEAM` accompanies the paper:
    
-    Pura J., Li X., Chan C., Xie J. 2021. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis. \url{https://arxiv.org/abs/1906.07757}
+[Pura J., Li X., Chan C., Xie J. 2021. TEAM: A Multiple Testing Algorithm on the Aggregation Tree for Flow Cytometry Analysis](https://arxiv.org/abs/1906.07757)
 
 
 # Authors
